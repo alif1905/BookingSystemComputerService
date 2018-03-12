@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    tools:context="com.example.aliff.bookingsystemcomputerservice.Admin_register">
+
+    <Button
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_gravity="right"
+        android:id="@+id/btnBackRegisterAdmin"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:id="@+id/textViewEmailAdmin"/>
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textEditorEmailAdmin"
+        android:inputType="textEmailAddress"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:id="@+id/textViewPasswordAdmin"/>
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textEditorPasswordAdmin"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:textStyle="bold"
+        android:textSize="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm Password"
+        android:id="@+id/textViewConfirmPasswordAdmin"
+        />
+    <EditText
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textEditorConfirmPasswordAdmin"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:id="@+id/ButtonSignUpAdmin"/>
+
+
+</LinearLayout>

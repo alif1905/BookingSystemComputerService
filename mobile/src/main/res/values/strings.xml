@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">BookingSystemComputerService</string>
+
+
+
+    <string name="service_provided">Select a service</string>
+    <string-array name="list_service">
+
+        <item>Format Laptop/PC</item>
+        <item>Dust Cleaning</item>
+        <item>Install Software</item>
+        <item>Replacement Part</item>
+        <item>Install Antivirus</item>
+    </string-array>
+    <string-array name="service_provided"/>
+
+    <string name="branded">Select a brand</string>
+    <string-array name="list_brand">
+
+        <item>Acer</item>
+        <item>Asus</item>
+        <item>Apple</item>
+        <item>Dell</item>
+        <item>HP</item>
+        <item>Lenovo</item>
+        <item>Samsung</item>
+        <item>Toshiba</item>
+    </string-array>
+    <string-array name="branded"/>
+
+    <string name="time">Select a brand</string>
+    <string-array name="list_time">
+
+        <item>10 A.M</item>
+        <item>11 A.M</item>
+        <item>12 P.M</item>
+        <item>1 P.M</item>
+        <item>2 P.M</item>
+        <item>3 P.M</item>
+        <item>4 P.M</item>
+        <item>5 P.M</item>
+        <item>6 P.M</item>
+        <item>7 P.M</item>
+        <item>8 P.M</item>
+        <item>9 P.M</item>
+        <item>10 P.M</item>
+    </string-array>
+    <string-array name="time"/>
+
+
+
+</resources>

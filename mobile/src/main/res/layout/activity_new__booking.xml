@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.aliff.bookingsystemcomputerservice.New_Booking"
+    android:orientation="vertical">
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1">
+
+
+
+
+
+        <TextView
+            android:id="@+id/DisplayTimeAndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Display TIme And Date"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText,LabelFor,TextViewEdits"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Service Require"
+            android:textSize="18sp"
+            android:id="@+id/service_require"
+            android:layout_alignParentLeft="true"
+            />
+        <Spinner
+            android:id="@+id/spinnerService_Require"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/spinnerservice_Require">
+
+
+        </Spinner>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select brand PC/Laptop:"
+            android:textSize="18sp"
+            android:id="@+id/Selectbrand"
+            android:layout_alignParentLeft="true"
+            />
+        <Spinner
+            android:id="@+id/spinnerBrand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/spinnerSelectBrand">
+
+
+        </Spinner>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter your model PC/Laptop:"
+            android:textSize="18sp"
+            android:id="@+id/model"
+            android:layout_alignParentLeft="true"
+            />
+        <EditText
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextModel"
+            android:inputType="text"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Time Picker: "
+            android:textSize="18sp"
+            android:id="@+id/selectTime"
+            android:layout_alignParentLeft="true"
+            />
+        <Spinner
+            android:id="@+id/spinnerSelecttimePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/spinnerSelectTime">
+
+
+        </Spinner>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Address :"
+            android:textSize="18sp"
+            android:id="@+id/addressCust"
+            android:layout_alignParentLeft="true"
+            />
+        <EditText
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:id="@+id/editTextAddressCust"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Phone Number :"
+            android:textSize="18sp"
+            android:id="@+id/PhoneCust"
+            android:layout_alignParentLeft="true"
+            android:inputType="text"/>
+        <EditText
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:id="@+id/editTextphoneCust"
+            />
+
+        <Button
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Book a service"
+            android:id="@+id/BtnBookServiceCust"/>
+
+
+        <Button
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Back"
+            android:id="@+id/BackBtn"/>
+
+    </TableLayout>
+
+</ScrollView>
