@@ -131,11 +131,12 @@
             />
 
         <Button
+            android:id="@+id/BtnBookServiceCust"
             android:layout_width="300sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Book a service"
-            android:id="@+id/BtnBookServiceCust"/>
+            android:onClick="submitForm"
+            android:text="Book a service" />
 
 
         <Button

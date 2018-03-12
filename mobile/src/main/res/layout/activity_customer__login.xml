@@ -24,20 +24,23 @@
         android:src="@drawable/fastplay2" />
 
 
-    <EditText
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_gravity="center"
-        android:id="@+id/emailCust"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:id="@+id/PasswordCust"/>
+        <EditText
+            android:id="@+id/emailCust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:text="ab@gmail.com" />
+
+        <EditText
+            android:id="@+id/PasswordCust"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:text="ababab" />
 
     <Button
         android:layout_marginTop="10dp"

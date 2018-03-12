@@ -28,7 +28,9 @@
         <activity android:name=".Profile_Admin" />
         <activity android:name=".Admin_register" />
         <activity android:name=".Booking_Service" />
-        <activity android:name=".New_Booking"></activity>
+        <activity android:name=".New_Booking" />
+        <activity android:name=".bookingsList" />
+        <activity android:name=".displayBooking"></activity>
     </application>
 
 </manifest>

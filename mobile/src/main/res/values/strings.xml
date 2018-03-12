@@ -2,7 +2,6 @@
     <string name="app_name">BookingSystemComputerService</string>
 
 
-
     <string name="service_provided">Select a service</string>
     <string-array name="list_service">
 
@@ -12,7 +11,7 @@
         <item>Replacement Part</item>
         <item>Install Antivirus</item>
     </string-array>
-    <string-array name="service_provided"/>
+    <string-array name="service_provided" />
 
     <string name="branded">Select a brand</string>
     <string-array name="list_brand">
@@ -26,7 +25,7 @@
         <item>Samsung</item>
         <item>Toshiba</item>
     </string-array>
-    <string-array name="branded"/>
+    <string-array name="branded" />
 
     <string name="time">Select a brand</string>
     <string-array name="list_time">
@@ -45,8 +44,7 @@
         <item>9 P.M</item>
         <item>10 P.M</item>
     </string-array>
-    <string-array name="time"/>
-
+    <string-array name="time" />
 
 
 </resources>

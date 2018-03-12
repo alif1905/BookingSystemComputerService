@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class Booking_Service extends AppCompatActivity {
 
-    private Button mBtnBackBookCust,mAddBookCust;
+    private Button mBtnBackBookCust,mAddBookCust, mBookins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +17,7 @@ public class Booking_Service extends AppCompatActivity {
 
         mBtnBackBookCust= findViewById(R.id.BtnBackBookingService);
         mAddBookCust= findViewById(R.id.AddBookCustomer);
+        mBookins = findViewById(R.id.mBookings);
 
 
         mBtnBackBookCust.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +43,16 @@ public class Booking_Service extends AppCompatActivity {
 
 
 
+            }
+        });
+
+
+     mBookins.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Booking_Service.this,bookingsList.class);
+                startActivity(intent);
+                finish();
             }
         });
 
