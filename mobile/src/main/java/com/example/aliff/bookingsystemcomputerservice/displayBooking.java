@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,40 @@ public class displayBooking extends AppCompatActivity {
         tvService = (TextView)findViewById(R.id.tvServiceType);
 
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.displaybookingsmenu,menu);
+
+
+        return true;
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent i = new Intent(displayBooking.this,bookingsList.class);
+                startActivity(i);
+                break;
+
+            case R.id.cancle :
+                Toast.makeText(getApplicationContext(),"SERVICE CANCELED!!", Toast.LENGTH_LONG).show();
+                break;
+
+
+        }
+        return true;
+    }
+
+
 
 
 
