@@ -41,20 +41,6 @@ public class Customer_LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-//        firebaseAuthListener= new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                if(user!=null){
-//                    Intent intent = new Intent(Customer_LoginActivity.this,Customer_Main_menu.class);
-//                    startActivity(intent);
-//                    Toast.makeText(Customer_LoginActivity.this,"Sign in successfull...", Toast.LENGTH_SHORT).show();
-//                    finish();
-//                    return;
-//                }
-//            }
-//        };
-
         mEmail = findViewById(R.id.emailCust);
         mPassword = findViewById(R.id.PasswordCust);
         mLogin = findViewById(R.id.customerSignIn);

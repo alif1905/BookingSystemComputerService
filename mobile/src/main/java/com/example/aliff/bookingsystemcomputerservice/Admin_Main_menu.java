@@ -16,56 +16,69 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
-public class Admin_Main_menu extends AppCompatActivity {
+public class Admin_Main_menu extends AppCompatActivity implements View.OnClickListener {
 
-    private Button mLogoutAdmin,mProfileAdmin,mRegisterAdmin;
+    private Button mLogoutAdmin, mProfileAdmin, mRegisterAdmin;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private String accesslevel;
+    private Button mBookings;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin__main_menu);
 
-        mLogoutAdmin= findViewById(R.id.LogoutAdmin);
-        mProfileAdmin= findViewById(R.id.ProfileAdmin);
+        mLogoutAdmin = findViewById(R.id.LogoutAdmin);
+        mProfileAdmin = findViewById(R.id.ProfileAdmin);
         mRegisterAdmin = findViewById(R.id.RegisterAdmin);
+        mBookings = (Button) findViewById(R.id.btnBookings);
 
-        mLogoutAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mBookings.setOnClickListener(this);
+        mRegisterAdmin.setOnClickListener(this);
+        mProfileAdmin.setOnClickListener(this);
+        mLogoutAdmin.setOnClickListener(this);
+
+    }
+
+
+    @Override
+    public void onClick(View view) {
+
+        Intent intent;
+
+        switch (view.getId()) {
+            case R.id.btnBookings:
+                intent = new Intent(Admin_Main_menu.this, bookingsList.class);
+                intent.putExtra("ACCESSLEVEL","ADMIN");
+                startActivity(intent);
+                finish();
+
+                break;
+            case R.id.ProfileAdmin:
+                intent = new Intent(Admin_Main_menu.this, Profile_Admin.class);
+                startActivity(intent);
+                finish();
+
+
+                break;
+            case R.id.RegisterAdmin:
+                intent = new Intent(Admin_Main_menu.this, Admin_register.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.LogoutAdmin:
                 FirebaseAuth.getInstance().signOut();
-                Toast.makeText(Admin_Main_menu.this, "Successfull Logout...", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Admin_Main_menu.this, MainActivity.class);
+                intent = new Intent(Admin_Main_menu.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                return;
-            }
-        });
 
-        mProfileAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Admin_Main_menu.this, "Profile...", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Admin_Main_menu.this, Profile_Admin.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
-        mRegisterAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Admin_Main_menu.this, "Register New User...", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Admin_Main_menu.this, Admin_register.class);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        });
+                break;
+        }
+
     }
 
     @Override
@@ -74,6 +87,10 @@ public class Admin_Main_menu extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String id = currentUser.getUid();
+
+        Toast.makeText(getApplicationContext(), "Welcome " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
+
+
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Register").child(id);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -86,9 +103,8 @@ public class Admin_Main_menu extends AppCompatActivity {
                     Intent i = new Intent(Admin_Main_menu.this, MainActivity.class);
                     startActivity(i);
                     finish();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Welcome "+auth.email, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Welcome " + auth.email, Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -100,6 +116,7 @@ public class Admin_Main_menu extends AppCompatActivity {
 
 
     }
+
 
     @IgnoreExtraProperties
     public static class Auth {

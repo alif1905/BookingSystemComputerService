@@ -1,8 +1,8 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class bookingsList extends AppCompatActivity {
 
@@ -28,12 +27,18 @@ public class bookingsList extends AppCompatActivity {
     ListView listView;
     private FirebaseAuth mAuth;
     ArrayList<String> values = new ArrayList<String>();
+    ArrayList<String> rootValues = new ArrayList<String>();
+
     ArrayAdapter<String> adapter;
+    private String accesslevel;
+    private DatabaseReference myRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookings_list);
+        Intent intent = getIntent();
+        accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
         listView = (ListView) findViewById(R.id.listView);
         adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_row_layout, R.id.rowTextView, values);
@@ -45,20 +50,23 @@ public class bookingsList extends AppCompatActivity {
                                     int position, long id) {
 
                 // ListView Clicked item index
-                int itemPosition     = position;
+                int itemPosition = position;
 
                 // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
+                String itemValue = (String) listView.getItemAtPosition(position);
 
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
+                        "Position :" + itemPosition + "  ListItem : " + rootValues.get(itemPosition).toString(), Toast.LENGTH_LONG)
                         .show();
 
 
                 Intent i = new Intent (bookingsList.this, displayBooking.class);
+                i.putExtra("CustID", rootValues.get(itemPosition).toString());
                 i.putExtra("Value",itemValue);
+                i.putExtra("ACCESSLEVEL",accesslevel);
                 startActivity(i);
+
 
             }
 
@@ -66,9 +74,20 @@ public class bookingsList extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-
-
+        if (accesslevel.equals("USER")) {
+            Intent i = new Intent(bookingsList.this, Booking_Service.class);
+            startActivity(i);
+            finish();
+        } else if (accesslevel.equals("ADMIN")) {
+            Intent i = new Intent(bookingsList.this, Admin_Main_menu.class);
+            startActivity(i);
+            finish();
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -76,7 +95,7 @@ public class bookingsList extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent i = new Intent(bookingsList.this, MainActivity.class);
+            Intent i = new Intent(bookingsList.this, Booking_Service.class);
             startActivity(i);
         }
 
@@ -90,19 +109,33 @@ public class bookingsList extends AppCompatActivity {
         values.clear();
         adapter.clear();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("Bookings").child(userid);
+
+        if (accesslevel.equals("ADMIN")) {
+            myRef = database.getReference().child("Bookings");
+        } else if (accesslevel.equals("USER")) {
+            myRef = database.getReference().child("Bookings").child(userid);
+        }
+
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
-                    String value=  uniqueKeySnapshot.getKey().toString();
-                    adapter.add(value);
+                    String value = uniqueKeySnapshot.getKey().toString();
 
-//                    for (DataSnapshot booksSnapshot : uniqueKeySnapshot.getChildren()) {
-//
-//                    }
+                    if (!accesslevel.equals("ADMIN")) {
+                        adapter.add(value);
+                    }
+
+
+                    if (accesslevel.equals("ADMIN")) {
+                        for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
+                            rootValues.add(value);
+                            String rootValue = RootSnapshot.getKey().toString();
+                            adapter.add(rootValue);
+                        }
+                    }
                 }
 
             }

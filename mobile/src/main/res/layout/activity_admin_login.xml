@@ -26,20 +26,24 @@
         android:layout_width="match_parent"
         android:layout_height="230dp"
         android:src="@drawable/fastplay2" />
-    <EditText
-        android:layout_marginTop="40dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        android:layout_gravity="center"
-        android:id="@+id/emailAdmin"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:id="@+id/passwordAdmin"/>
+
+        <EditText
+            android:id="@+id/emailAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:text="admin@gmail.com" />
+
+        <EditText
+            android:id="@+id/passwordAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:text="adminadmin" />
 
     <Button
         android:layout_marginTop="10dp"

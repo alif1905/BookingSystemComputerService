@@ -51,10 +51,20 @@ public class Booking_Service extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Booking_Service.this,bookingsList.class);
+                intent.putExtra("ACCESSLEVEL","USER");
                 startActivity(intent);
                 finish();
             }
         });
 
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Booking_Service.this, Customer_Main_menu.class);
+        startActivity(i);
+        finish();
     }
 }

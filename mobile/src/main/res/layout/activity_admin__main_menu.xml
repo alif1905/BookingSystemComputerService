@@ -21,21 +21,22 @@
 
 
     <Button
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center"
-        android:textSize="15dp"
+        android:id="@+id/RegisterAdmin"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Register User"
-        android:id="@+id/RegisterAdmin"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="Register Admin"
+        android:textSize="15dp" />
 
     <Button
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:textSize="15dp"
+        android:id="@+id/btnBookings"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text=" Booking Response "/>
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="Bookings"
+        android:textSize="15dp" />
 
     <Button
         android:layout_marginTop="10dp"
