@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class displayBooking extends AppCompatActivity {
     private String userid, value;
     private FirebaseAuth mAuth;
@@ -46,13 +48,14 @@ public class displayBooking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_booking);
         Intent intent = getIntent();
+
         CustId = intent.getStringExtra("CustID");
         value = intent.getStringExtra("Value");
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
 
-        mBtnAccept =(Button)findViewById(R.id.btnAccept);
-        mBtnReject =(Button)findViewById(R.id.btnReject);
+        mBtnAccept = (Button) findViewById(R.id.btnAccept);
+        mBtnReject = (Button) findViewById(R.id.btnReject);
         tvAdd = (TextView) findViewById(R.id.tvAddress);
         tvBrand = (TextView) findViewById(R.id.tvBrand);
         tvModel = (TextView) findViewById(R.id.tvModel);
@@ -60,13 +63,12 @@ public class displayBooking extends AppCompatActivity {
         tvPick = (TextView) findViewById(R.id.tvPickUpTime);
         tvService = (TextView) findViewById(R.id.tvServiceType);
         progressDialog = ProgressDialog.show(displayBooking.this, "Please wait...", "Processing...", true);
+//
 
-
-        if(accesslevel.equals("USER")){
+        if (accesslevel.equals("USER")) {
             mBtnAccept.setVisibility(View.INVISIBLE);
             mBtnReject.setVisibility(View.INVISIBLE);
-        }
-            else {
+        } else {
             mBtnAccept.setVisibility(View.VISIBLE);
             mBtnReject.setVisibility(View.VISIBLE);
         }
@@ -211,6 +213,7 @@ public class displayBooking extends AppCompatActivity {
                 tvPhone.setText(service.PhoneNo);
                 tvPick.setText(service.PickupTime);
                 tvService.setText(service.Service);
+                //   Toast.makeText(getApplicationContext(), service.Status.get(0),Toast.LENGTH_LONG).show();
 
 
                 new Handler().postDelayed(new Runnable() {
@@ -239,8 +242,6 @@ public class displayBooking extends AppCompatActivity {
         public String PickupTime;
         public String Service;
         public String Brand;
-
-
         public Services() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
@@ -253,7 +254,9 @@ public class displayBooking extends AppCompatActivity {
             Service = service;
             Brand = brand;
         }
-
-
     }
+
+
+
+
 }

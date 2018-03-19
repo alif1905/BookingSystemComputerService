@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -56,16 +57,16 @@ public class bookingsList extends AppCompatActivity {
                 String itemValue = (String) listView.getItemAtPosition(position);
 
                 // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + rootValues.get(itemPosition).toString(), Toast.LENGTH_LONG)
-                        .show();
+//                Toast.makeText(getApplicationContext(),
+//                        "Position :" + itemPosition + "  ListItem : " + rootValues.get(itemPosition).toString(), Toast.LENGTH_LONG)
+//                        .show();
 
 
-                Intent i = new Intent (bookingsList.this, displayBooking.class);
-                i.putExtra("CustID", rootValues.get(itemPosition).toString());
-                i.putExtra("Value",itemValue);
-                i.putExtra("ACCESSLEVEL",accesslevel);
-                startActivity(i);
+                    Intent i = new Intent(bookingsList.this, displayBooking.class);
+                    i.putExtra("CustID", rootValues.get(itemPosition).toString());
+                    i.putExtra("Value", itemValue);
+                    i.putExtra("ACCESSLEVEL", accesslevel);
+                    startActivity(i);
 
 
             }
@@ -107,11 +108,14 @@ public class bookingsList extends AppCompatActivity {
 
     public void getBookings() {
         values.clear();
+        rootValues.clear();
         adapter.clear();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         if (accesslevel.equals("ADMIN")) {
             myRef = database.getReference().child("Bookings");
+
+
         } else if (accesslevel.equals("USER")) {
             myRef = database.getReference().child("Bookings").child(userid);
         }
@@ -121,23 +125,24 @@ public class bookingsList extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
                     String value = uniqueKeySnapshot.getKey().toString();
 
-                    if (!accesslevel.equals("ADMIN")) {
+                    if (accesslevel.equals("USER")) {
+                        rootValues.add(value);
                         adapter.add(value);
-                    }
 
 
-                    if (accesslevel.equals("ADMIN")) {
+                    } else if (accesslevel.equals("ADMIN")) {
                         for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
+                            String whoReject = RootSnapshot.child("Status").child(userid).getKey();
                             rootValues.add(value);
                             String rootValue = RootSnapshot.getKey().toString();
                             adapter.add(rootValue);
                         }
                     }
                 }
-
             }
 
             @Override
@@ -147,8 +152,6 @@ public class bookingsList extends AppCompatActivity {
             }
         });
 
-        adapter.addAll(values);
     }
-
 
 }
