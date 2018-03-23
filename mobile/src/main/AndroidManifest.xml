@@ -30,7 +30,9 @@
         <activity android:name=".Booking_Service" />
         <activity android:name=".New_Booking" />
         <activity android:name=".bookingsList" />
-        <activity android:name=".displayBooking"></activity>
+        <activity android:name=".displayBooking" />
+        <activity android:name=".inventory_list" />
+        <activity android:name=".inventory_form"></activity>
     </application>
 
 </manifest>

@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Admin_Main_menu extends AppCompatActivity implements View.OnClickListener {
 
-    private Button mLogoutAdmin, mProfileAdmin, mRegisterAdmin;
+    private Button mRecordInventory, mLogoutAdmin, mProfileAdmin, mRegisterAdmin;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
@@ -36,11 +36,13 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         mProfileAdmin = findViewById(R.id.ProfileAdmin);
         mRegisterAdmin = findViewById(R.id.RegisterAdmin);
         mBookings = (Button) findViewById(R.id.btnBookings);
+        mRecordInventory = (Button) findViewById(R.id.btnRecordInventory);
 
         mBookings.setOnClickListener(this);
         mRegisterAdmin.setOnClickListener(this);
         mProfileAdmin.setOnClickListener(this);
         mLogoutAdmin.setOnClickListener(this);
+        mRecordInventory.setOnClickListener(this);
 
     }
 
@@ -51,9 +53,15 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         Intent intent;
 
         switch (view.getId()) {
+
+            case R.id.btnRecordInventory:
+                intent = new Intent(Admin_Main_menu.this, inventory_list.class);
+                startActivity(intent);
+                finish();
+                break;
             case R.id.btnBookings:
                 intent = new Intent(Admin_Main_menu.this, bookingsList.class);
-                intent.putExtra("ACCESSLEVEL","ADMIN");
+                intent.putExtra("ACCESSLEVEL", "ADMIN");
                 startActivity(intent);
                 finish();
 
