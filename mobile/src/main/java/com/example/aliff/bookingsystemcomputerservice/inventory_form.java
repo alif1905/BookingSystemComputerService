@@ -32,7 +32,7 @@ import java.util.Map;
 public class inventory_form extends AppCompatActivity implements View.OnClickListener {
 
     private Spinner etName, etBrand, etPrice, etQuantity;
-    private Button btAdd,mbtnDelete;
+    private Button btAdd, mbtnDelete;
     private String itemName;
     private String itemBrand;
     private String itemPrice;
@@ -46,7 +46,9 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
     private String accesslevel;
 
     ArrayAdapter<CharSequence> adapterItemName, adapterBrandItem, adapterPrice, adapterQuantity;
+    private EditText itemNameEt, brandEt, priceEt, quantityEt;
     private String ItemNameDb, BrandItemDb, PriceDb, QuantityDb;
+    private String itemPos;
 
 
     @Override
@@ -63,10 +65,18 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         etPrice = (Spinner) findViewById(R.id.etPrice);
         etQuantity = (Spinner) findViewById(R.id.etQuantity);
         btAdd = (Button) findViewById(R.id.btnAdd);
-        mbtnDelete=(Button)findViewById(R.id.btnDelete) ;
+        mbtnDelete = (Button) findViewById(R.id.btnDelete);
+
+
+        itemNameEt =(EditText)findViewById(R.id.itemNameEt);
+        brandEt =(EditText)findViewById(R.id.brandEt);
+        priceEt =(EditText)findViewById(R.id.priceEt);
+        quantityEt=(EditText)findViewById(R.id.quantityEt);
+
+
+
         btAdd.setOnClickListener(this);
         mbtnDelete.setOnClickListener(this);
-
 
 
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
@@ -82,8 +92,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         etName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ItemNameDb = (String) adapterItemName.getItem(position);
-
+                String value = (String) adapterItemName.getItem(position);
+                itemNameEt.setText(value);
             }
 
             @Override
@@ -91,8 +101,6 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-
-
 
 
         adapterBrandItem = ArrayAdapter.createFromResource(this,
@@ -105,8 +113,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         etBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                BrandItemDb = (String) adapterBrandItem.getItem(position);
-
+                String value = (String) adapterBrandItem.getItem(position);
+                brandEt.setText(value);
             }
 
             @Override
@@ -114,8 +122,6 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-
-
 
 
         adapterPrice = ArrayAdapter.createFromResource(this,
@@ -128,8 +134,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         etPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                PriceDb = (String) adapterPrice.getItem(position);
-
+                String value = (String) adapterPrice.getItem(position);
+                priceEt.setText(value);
             }
 
             @Override
@@ -149,8 +155,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         etQuantity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                QuantityDb = (String) adapterQuantity.getItem(position);
-
+                String value = (String) adapterQuantity.getItem(position);
+                quantityEt.setText(value);
             }
 
             @Override
@@ -158,20 +164,6 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
@@ -192,6 +184,9 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         if (fromPage.equals("INVENTORY")) {
             btAdd.setText("UPDATE");
             getData();
+        }
+        else {
+            mbtnDelete.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -218,7 +213,6 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
                 delete();
                 break;
         }
-
 
 
     }
@@ -276,7 +270,6 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
     }
 
 
-
     public void getData() {
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -286,12 +279,12 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Inventory inventory = dataSnapshot.getValue(Inventory.class);
-                  itemName= (String) etName.getSelectedItem();
-                itemBrand= (String) etBrand.getSelectedItem();
-                itemPrice= (String) etPrice.getSelectedItem();
-                itemQuantity= (String) etQuantity.getSelectedItem();
-                etName.setFocusable(false);
-                etBrand.setFocusable(false);
+                itemNameEt.setText(inventory.itemName);
+                brandEt.setText(inventory.itemBrand);
+                priceEt.setText(inventory.itemPrice);
+                quantityEt.setText(inventory.itemQuantity);
+                itemNameEt.setFocusable(false);
+                brandEt.setFocusable(false);
             }
 
             @Override
@@ -305,37 +298,35 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
     }
 
     public void submit() {
-        itemName = etName.getSelectedItem().toString();
-        itemBrand = etBrand.getSelectedItem().toString();
-        itemPrice = etPrice.getSelectedItem().toString();
-        itemQuantity = etQuantity.getSelectedItem().toString();
+        itemName = itemNameEt.getText().toString();
+        itemBrand = brandEt.getText().toString();
+        itemPrice = priceEt.getText().toString();
+        itemQuantity = quantityEt.getText().toString();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("inventory");
 
-        if(fromPage.equals("INVENTORY")){
+        if (fromPage.equals("INVENTORY")) {
             key = itemID;
-        }
-            else {
-            key = itemName +" " +itemBrand;
+
+        } else {
+            key = itemName + " " + itemBrand;
         }
 
         Inventory inventory = new Inventory(itemName, itemBrand, itemPrice, itemQuantity);
         Map<String, Object> inventoryValue = inventory.toMap();
         Map<String, Object> inventoryPut = new HashMap<>();
-       inventoryPut.put(itemName + " " + itemBrand
+        inventoryPut.put(itemName + " " + itemBrand
                 , inventoryValue);
 
         //myRef.setValue(inventoryPut);
         myRef.child(key).setValue(inventoryValue).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"Inventory Successfully Updated",Toast.LENGTH_LONG).show();
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Inventory Successfully Updated", Toast.LENGTH_LONG).show();
                     onBackPressed();
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Inventory Update Failed, Please Try Again",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Inventory Update Failed, Please Try Again", Toast.LENGTH_LONG).show();
                 }
             }
         });

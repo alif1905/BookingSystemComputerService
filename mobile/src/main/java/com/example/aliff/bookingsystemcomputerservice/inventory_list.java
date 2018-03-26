@@ -55,6 +55,7 @@ public class inventory_list extends AppCompatActivity {
 
                 Intent i = new Intent(inventory_list.this, inventory_form.class);
                 i.putExtra("ID", itemValue);
+             
                 i.putExtra("PAGE", "INVENTORY");
                 startActivity(i);
 

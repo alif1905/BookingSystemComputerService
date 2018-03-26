@@ -10,6 +10,8 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -18,20 +20,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:text="Item Name"
             android:inputType="textPersonName"
+            android:text="Item Name"
             android:textSize="20sp"
 
             />
 
-        <Spinner
-            android:id="@+id/etItemName"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
+            android:orientation="horizontal">
 
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/itemNameEt"
+                android:layout_width="301dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/etItemName"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/TVBrand"
@@ -39,20 +56,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:text="Brand"
             android:inputType="textPersonName"
+            android:text="Brand"
             android:textSize="20sp"
 
             />
 
-        <Spinner
-            android:id="@+id/etBrand"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
+            android:orientation="horizontal">
 
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/brandEt"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/etBrand"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </LinearLayout>
 
 
         <TextView
@@ -61,20 +93,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:text="Price"
             android:inputType="textPersonName"
+            android:text="Price"
             android:textSize="20sp"
 
             />
 
-        <Spinner
-            android:id="@+id/etPrice"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
+            android:orientation="horizontal">
 
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/priceEt"
+                android:layout_width="305dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/etPrice"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/TVQuantity"
@@ -82,34 +129,49 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ems="10"
-            android:text="Quantity Stock"
             android:inputType="textPersonName"
+            android:text="Quantity Stock"
             android:textSize="20sp"
 
             />
 
 
-        <Spinner
-            android:id="@+id/etQuantity"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="10"
+            android:orientation="horizontal">
 
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/quantityEt"
+                android:layout_width="311dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Spinner
+                android:id="@+id/etQuantity"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </LinearLayout>
 
         <Button
-            android:layout_marginTop="40sp"
             android:id="@+id/btnAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="40sp"
             android:text="Add Inventory" />
 
         <Button
-            android:layout_marginTop="18sp"
             android:id="@+id/btnDelete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18sp"
             android:text="Delete Inventory" />
     </LinearLayout>
 
