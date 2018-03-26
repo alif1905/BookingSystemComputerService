@@ -17,16 +17,23 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.ValueEventListener;
 
 public class Admin_register extends AppCompatActivity {
     private TextView tEmail,tPassword,tConfirmPassword;
     private EditText eEmail,ePassword,eConfirmPassword;
     private Button btnSignUp,btNBack;
 
+    private FirebaseDatabase database;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
+    private String accesslevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,67 @@ public class Admin_register extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String id = currentUser.getUid();
+        database = FirebaseDatabase.getInstance();
+        mDatabaseRef = database.getReference("Register").child(id);
+        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Customer_Main_menu.Auth auth = dataSnapshot.getValue(Customer_Main_menu.Auth.class);
+                accesslevel = auth.accessLevel;
+                if (!accesslevel.equals("Admin")) {
+                    Toast.makeText(getApplicationContext(), "Login failed, please Login as Admin...", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(Admin_register.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    @IgnoreExtraProperties
+    public static class Auth {
+
+        public String email;
+        public String accessLevel;
+
+        public Auth() {
+        }
+
+        public Auth(String email, String accessLevel) {
+            this.email = email;
+            this.accessLevel = accessLevel;
+        }
+
+    }
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Admin_register.this, Admin_Main_menu.class);
+        i.putExtra("ACCESSLEVEL", accesslevel);
+        startActivity(i);
+        finish();
+    }
+
     private void startRegister(){
         final String textEditorEmail = eEmail.getText().toString().trim();
 

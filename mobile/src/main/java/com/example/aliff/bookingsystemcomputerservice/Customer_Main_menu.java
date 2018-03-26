@@ -95,6 +95,8 @@ public class Customer_Main_menu extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String id = currentUser.getUid();
+
+        Toast.makeText(getApplicationContext(), "Welcome " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("Register").child(id);
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -108,9 +110,7 @@ public class Customer_Main_menu extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 }
-                else {
-                    Toast.makeText(getApplicationContext(), "Welcome "+auth.email, Toast.LENGTH_LONG).show();
-                }
+
             }
 
             @Override

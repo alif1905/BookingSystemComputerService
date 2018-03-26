@@ -111,8 +111,6 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
                     Intent i = new Intent(Admin_Main_menu.this, MainActivity.class);
                     startActivity(i);
                     finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Welcome " + auth.email, Toast.LENGTH_LONG).show();
                 }
             }
 

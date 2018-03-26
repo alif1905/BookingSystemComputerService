@@ -130,7 +130,13 @@ public class Profile_Customer extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Profile_Customer.this, Customer_Main_menu.class);
+        startActivity(i);
+        finish();
+    }
 
     private void saveUserInformation() {
         mName = mNameField.getText().toString();
@@ -152,7 +158,7 @@ public class Profile_Customer extends AppCompatActivity {
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 25, baos);
             byte[] data = baos.toByteArray();
             UploadTask uploadTask = filePath.putBytes(data);
 

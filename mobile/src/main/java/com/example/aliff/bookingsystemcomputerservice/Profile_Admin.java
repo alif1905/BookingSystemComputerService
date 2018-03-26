@@ -1,6 +1,7 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -69,6 +70,9 @@ public class Profile_Admin extends AppCompatActivity {
         userID = mAuth.getCurrentUser().getUid();
         mCustomerDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Customers").child(userID);
 
+
+
+
         getUserInfo();
 
         mProfileImage.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +106,14 @@ public class Profile_Admin extends AppCompatActivity {
                 return;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Profile_Admin.this, Admin_Main_menu.class);
+        startActivity(i);
+        finish();
     }
     private void getUserInfo(){
         mCustomerDatabase.addValueEventListener(new ValueEventListener() {
@@ -152,7 +164,7 @@ public class Profile_Admin extends AppCompatActivity {
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 25, baos);
             byte[] data = baos.toByteArray();
             UploadTask uploadTask = filePath.putBytes(data);
 

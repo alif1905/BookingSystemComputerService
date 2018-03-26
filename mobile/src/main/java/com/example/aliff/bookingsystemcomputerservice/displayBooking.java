@@ -34,7 +34,7 @@ public class displayBooking extends AppCompatActivity {
     private String userid, value;
     private FirebaseAuth mAuth;
 
-    private TextView tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService;
+    private TextView tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService,tvDate;
     private String accesslevel;
     private String CustId;
     private DatabaseReference myRef;
@@ -56,6 +56,7 @@ public class displayBooking extends AppCompatActivity {
 
         mBtnAccept = (Button) findViewById(R.id.btnAccept);
         mBtnReject = (Button) findViewById(R.id.btnReject);
+        tvDate=(TextView)findViewById(R.id.tvDate);
         tvAdd = (TextView) findViewById(R.id.tvAddress);
         tvBrand = (TextView) findViewById(R.id.tvBrand);
         tvModel = (TextView) findViewById(R.id.tvModel);
@@ -206,7 +207,7 @@ public class displayBooking extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Services service = dataSnapshot.getValue(Services.class);
-
+                tvDate.setText(service.Date);
                 tvAdd.setText(service.Address);
                 tvBrand.setText(service.Brand);
                 tvModel.setText(service.Model);
@@ -235,7 +236,7 @@ public class displayBooking extends AppCompatActivity {
 
     @IgnoreExtraProperties
     public static class Services {
-
+        public  String Date;
         public String Address;
         public String Model;
         public String PhoneNo;
@@ -246,7 +247,8 @@ public class displayBooking extends AppCompatActivity {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Services(String address, String model, String phoneNo, String pickupTime, String service, String brand) {
+        public Services(String address, String model, String phoneNo, String pickupTime, String service, String brand,String date) {
+            Date=date;
             Address = address;
             Model = model;
             PhoneNo = phoneNo;

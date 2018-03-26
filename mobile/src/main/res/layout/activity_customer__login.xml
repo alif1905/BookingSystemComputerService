@@ -32,7 +32,7 @@
             android:layout_marginTop="20dp"
             android:hint="Email"
             android:inputType="textEmailAddress"
-            android:text="ab@gmail.com" />
+            android:text="aa@gmail.com" />
 
         <EditText
             android:id="@+id/PasswordCust"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:inputType="textPassword"
-            android:text="ababab" />
+            android:text="aaaaaa" />
 
     <Button
         android:layout_marginTop="10dp"
@@ -59,7 +59,7 @@
     <TextView
 
         android:textStyle="bold"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:layout_marginTop="5dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"

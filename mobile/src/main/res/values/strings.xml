@@ -47,4 +47,79 @@
     <string-array name="time" />
 
 
+    <string name="item_name">Item Name</string>
+    <string-array name="list_item">
+
+        <item>RAM 1GB</item>
+        <item>RAM 2GB</item>
+        <item>RAM 4GB</item>
+        <item>RAM 8GB</item>
+        <item>Memory Card 1GB</item>
+        <item>Memory Card 2GB</item>
+        <item>Memory Card 4GB</item>
+        <item>Memory Card 8GB</item>
+        <item>Hardisk 256GB</item>
+        <item>Hardisk 512GB</item>
+        <item>Hardisk 1TB</item>
+        <item>Hardisk 2TB</item>
+        <item>Screen Monitor 15"</item>
+        <item>Screen Monitor 18"</item>
+        <item>Screen Monitor 20"</item>
+        <item>Keyboard</item>
+    </string-array>
+    <string-array name="item_name" />
+
+    <string name="branded_item">Select a brand</string>
+    <string-array name="list_brand_item">
+
+        <item>Acer</item>
+        <item>SATA</item>
+        <item>Western Digital (WD)</item>
+        <item>Asus</item>
+        <item>Apple</item>
+        <item>Dell</item>
+        <item>HP</item>
+        <item>Lenovo</item>
+        <item>Samsung</item>
+        <item>Toshiba</item>
+    </string-array>
+
+
+    <string-array name="branded_item" />
+
+    <string name="quantity">Quantity</string>
+    <string-array name="list_quantity">
+
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+
+    </string-array>
+    <string-array name="quantity" />
+
+    <string name="price">Price</string>
+    <string-array name="list_price">
+
+        <item>RM10</item>
+        <item>RM20</item>
+        <item>RM30</item>
+        <item>RM40</item>
+        <item>RM50</item>
+        <item>RM60</item>
+        <item>RM70</item>
+        <item>RM80</item>
+        <item>RM90</item>
+        <item>RM100</item>
+
+    </string-array>
+    <string-array name="price" />
+
+
 </resources>

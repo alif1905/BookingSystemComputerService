@@ -1,9 +1,12 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +17,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -23,12 +29,14 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Map;
 
-public class New_Booking extends AppCompatActivity {
+public class New_Booking extends AppCompatActivity implements View.OnClickListener {
     private DatabaseReference mDatabaseRef;
-    private Button mBackBtn;
+    private Button mBackBtn,mBtnSubmit;
     private TextView mDisplayTimeDate, mModel, mAddress, mphoneCust;
     private EditText mEditModel, mEditAddress, mEditPhone;
     private Spinner mspinnerService, mspinnerBrand, mSpinnerTime;
+    private String accesslevel;
+
     private FirebaseAuth mAuth;
     ArrayAdapter<CharSequence> adapterService, adapterbrand, adapterTime;
 
@@ -39,9 +47,12 @@ public class New_Booking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__booking);
 
+        Intent intent = getIntent();
+        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
 
         mBackBtn = findViewById(R.id.BackBtn);
-
+        mBtnSubmit = findViewById(R.id.BtnBookServiceCust);
         mspinnerService = findViewById(R.id.spinnerService_Require);
         mspinnerBrand = findViewById(R.id.spinnerBrand);
         mSpinnerTime = findViewById(R.id.spinnerSelecttimePicker);
@@ -118,24 +129,31 @@ public class New_Booking extends AppCompatActivity {
         });
 
 
-        mBackBtn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-
-            public void onClick(View v) {
 
 
-                Intent intent = new Intent(New_Booking.this, Booking_Service.class);
-                startActivity(intent);
-                Toast.makeText(New_Booking.this, "Back...", Toast.LENGTH_SHORT).show();
-                finish();
-                return;
-            }
-        });
 
+        mBackBtn.setOnClickListener(this);
 
+        mBtnSubmit.setOnClickListener(this);
     }
 
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.BackBtn:
+                Intent intent = new Intent(New_Booking.this, Booking_Service.class);
+                startActivity(intent);
+                finish();
+                break;
+
+            case R.id.BtnBookServiceCust:
+                submitForm();
+
+
+                break;
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -150,26 +168,58 @@ public class New_Booking extends AppCompatActivity {
     }
 
 
-    public void submitForm(View view) {
-
-        modelDb = mEditModel.getText().toString();
-        addressDb = mEditAddress.getText().toString();
-        phoneNoDb = mEditPhone.getText().toString();
-
-
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Bookings");
-        DatabaseReference current_user_db = mDatabaseRef.child(userid).child(brandDb+" "+modelDb);
-        current_user_db.child("Date").setValue(dateDb);
-        current_user_db.child("Service").setValue(serviceDb);
-        current_user_db.child("Brand").setValue(brandDb);
-        current_user_db.child("Model").setValue(modelDb);
-        current_user_db.child("PickupTime").setValue(pickupTimeDb);
-        current_user_db.child("Address").setValue(addressDb);
-        current_user_db.child("PhoneNo").setValue(phoneNoDb);
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(New_Booking.this, Booking_Service.class);
+        i.putExtra("ACCESSLEVEL", accesslevel);
+        startActivity(i);
+        finish();
     }
 
 
+    public void submitForm() {
+
+        modelDb = mEditModel.getText().toString();
+
+        addressDb = mEditAddress.getText().toString();
+        phoneNoDb = mEditPhone.getText().toString();
+        dateDb = mDisplayTimeDate.getText().toString();
+
+        if (TextUtils.isEmpty(modelDb)) {
+            Toast.makeText(New_Booking.this, "Model PC/Laptop is required", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+        if (TextUtils.isEmpty(addressDb)) {
+            Toast.makeText(New_Booking.this, "Address is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(phoneNoDb)) {
+            Toast.makeText(New_Booking.this, "Phone Number is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        if ((!TextUtils.isEmpty(modelDb) && !TextUtils.isEmpty(addressDb) && !TextUtils.isEmpty(phoneNoDb))) {
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Bookings");
+            DatabaseReference current_user_db = mDatabaseRef.child(userid).child(brandDb + " " + modelDb);
+            current_user_db.child("Date").setValue(dateDb);
+            current_user_db.child("Service").setValue(serviceDb);
+            current_user_db.child("Brand").setValue(brandDb);
+            current_user_db.child("Model").setValue(modelDb);
+            current_user_db.child("PickupTime").setValue(pickupTimeDb);
+            current_user_db.child("Address").setValue(addressDb);
+            current_user_db.child("PhoneNo").setValue(phoneNoDb);
+            Intent i = new Intent(New_Booking.this, Booking_Service.class);
+            startActivity(i);
+
+            Toast.makeText(New_Booking.this,"Successfull Book a Service...", Toast.LENGTH_SHORT).show();
+            finish();
+
+        }
+
+    }
 
 
 
@@ -185,7 +235,7 @@ public class New_Booking extends AppCompatActivity {
             dateTime.set(Calendar.DAY_OF_MONTH, day);
             updateTimeDate();
 
-            //getUserInfo();
+
         }
     };
 

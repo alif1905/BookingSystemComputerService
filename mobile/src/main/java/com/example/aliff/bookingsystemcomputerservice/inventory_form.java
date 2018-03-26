@@ -1,12 +1,17 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,8 +31,8 @@ import java.util.Map;
 
 public class inventory_form extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText etName, etBrand, etPrice, etQuantity;
-    private Button btAdd;
+    private Spinner etName, etBrand, etPrice, etQuantity;
+    private Button btAdd,mbtnDelete;
     private String itemName;
     private String itemBrand;
     private String itemPrice;
@@ -38,6 +43,11 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
     private String userid;
     private String itemID;
     private String key;
+    private String accesslevel;
+
+    ArrayAdapter<CharSequence> adapterItemName, adapterBrandItem, adapterPrice, adapterQuantity;
+    private String ItemNameDb, BrandItemDb, PriceDb, QuantityDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +58,120 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         itemID = intent.getStringExtra("ID");
         fromPage = intent.getStringExtra("PAGE");
 
-        etName = (EditText) findViewById(R.id.etItemName);
-        etBrand = (EditText) findViewById(R.id.etBrand);
-        etPrice = (EditText) findViewById(R.id.etPrice);
-        etQuantity = (EditText) findViewById(R.id.etQuantity);
+        etName = (Spinner) findViewById(R.id.etItemName);
+        etBrand = (Spinner) findViewById(R.id.etBrand);
+        etPrice = (Spinner) findViewById(R.id.etPrice);
+        etQuantity = (Spinner) findViewById(R.id.etQuantity);
         btAdd = (Button) findViewById(R.id.btnAdd);
+        mbtnDelete=(Button)findViewById(R.id.btnDelete) ;
         btAdd.setOnClickListener(this);
+        mbtnDelete.setOnClickListener(this);
+
+
+
+        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
+
+        adapterItemName = ArrayAdapter.createFromResource(this,
+                R.array.list_item, android.R.layout.simple_spinner_item);
+
+        adapterItemName.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        etName.setAdapter(adapterItemName);
+
+        etName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ItemNameDb = (String) adapterItemName.getItem(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+        adapterBrandItem = ArrayAdapter.createFromResource(this,
+                R.array.list_brand_item, android.R.layout.simple_spinner_item);
+
+        adapterBrandItem.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        etBrand.setAdapter(adapterBrandItem);
+
+        etBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                BrandItemDb = (String) adapterBrandItem.getItem(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+        adapterPrice = ArrayAdapter.createFromResource(this,
+                R.array.list_price, android.R.layout.simple_spinner_item);
+
+        adapterPrice.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        etPrice.setAdapter(adapterPrice);
+
+        etPrice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PriceDb = (String) adapterPrice.getItem(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        adapterQuantity = ArrayAdapter.createFromResource(this,
+                R.array.list_quantity, android.R.layout.simple_spinner_item);
+
+        adapterQuantity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        etQuantity.setAdapter(adapterQuantity);
+
+        etQuantity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                QuantityDb = (String) adapterQuantity.getItem(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
@@ -94,9 +212,69 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
             case R.id.btnAdd:
                 submit();
                 break;
+
+            case R.id.btnDelete:
+
+                delete();
+                break;
         }
 
+
+
     }
+
+    public void delete() {
+        AlertDialog alertDialog = new AlertDialog.Builder(inventory_form.this).create();
+        alertDialog.setTitle("Delete Inventory");
+        alertDialog.setMessage("Are you sure you want to delete this inventory?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, int which) {
+                        myRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                dialog.dismiss();
+                                deleteResponse();
+
+
+                            }
+                        });
+
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+
+
+    }
+
+    public void deleteResponse() {
+
+        AlertDialog alertDialog = new AlertDialog.Builder(inventory_form.this).create();
+        alertDialog.setMessage("Booking Canceled");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        Intent i = new Intent(inventory_form.this, inventory_list.class);
+                        i.putExtra("ACCESSLEVEL", accesslevel);
+                        startActivity(i);
+                        finish();
+                    }
+                });
+        alertDialog.show();
+
+
+    }
+
 
 
     public void getData() {
@@ -108,10 +286,10 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Inventory inventory = dataSnapshot.getValue(Inventory.class);
-                etName.setText(inventory.itemName);
-                etBrand.setText(inventory.itemBrand);
-                etPrice.setText(inventory.itemPrice);
-                etQuantity.setText(inventory.itemQuantity);
+                  itemName= (String) etName.getSelectedItem();
+                itemBrand= (String) etBrand.getSelectedItem();
+                itemPrice= (String) etPrice.getSelectedItem();
+                itemQuantity= (String) etQuantity.getSelectedItem();
                 etName.setFocusable(false);
                 etBrand.setFocusable(false);
             }
@@ -127,10 +305,10 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
     }
 
     public void submit() {
-        itemName = etName.getText().toString();
-        itemBrand = etBrand.getText().toString();
-        itemPrice = etPrice.getText().toString();
-        itemQuantity = etQuantity.getText().toString();
+        itemName = etName.getSelectedItem().toString();
+        itemBrand = etBrand.getSelectedItem().toString();
+        itemPrice = etPrice.getSelectedItem().toString();
+        itemQuantity = etQuantity.getSelectedItem().toString();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("inventory");
 
@@ -144,8 +322,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         Inventory inventory = new Inventory(itemName, itemBrand, itemPrice, itemQuantity);
         Map<String, Object> inventoryValue = inventory.toMap();
         Map<String, Object> inventoryPut = new HashMap<>();
-//        inventoryPut.put(itemName + " " + itemBrand
-//                , inventoryValue);
+       inventoryPut.put(itemName + " " + itemBrand
+                , inventoryValue);
 
         //myRef.setValue(inventoryPut);
         myRef.child(key).setValue(inventoryValue).addOnCompleteListener(new OnCompleteListener<Void>() {
