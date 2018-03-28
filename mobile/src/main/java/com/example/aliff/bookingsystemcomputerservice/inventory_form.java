@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,17 +27,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class inventory_form extends AppCompatActivity implements View.OnClickListener {
 
-    private Spinner etName, etBrand, etPrice, etQuantity;
+
+
+    private Spinner etName, etBrand, etPrice, etQuantity,etQuantityRemaining;
     private Button btAdd, mbtnDelete;
     private String itemName;
     private String itemBrand;
     private String itemPrice;
     private String itemQuantity;
+    private String itemQuantityRemaining;
     private DatabaseReference myRef;
     private String fromPage;
     private FirebaseAuth mAuth;
@@ -45,8 +51,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
     private String key;
     private String accesslevel;
 
-    ArrayAdapter<CharSequence> adapterItemName, adapterBrandItem, adapterPrice, adapterQuantity;
-    private EditText itemNameEt, brandEt, priceEt, quantityEt;
+    ArrayAdapter<CharSequence> adapterItemName, adapterBrandItem, adapterPrice, adapterQuantity,adapterQuantityRemaining;
+    private TextView itemNameEt, brandEt, priceEt, quantityEt,quantityRemainingEt,TVQuantityRemaining;
     private String ItemNameDb, BrandItemDb, PriceDb, QuantityDb;
     private String itemPos;
 
@@ -64,15 +70,17 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         etBrand = (Spinner) findViewById(R.id.etBrand);
         etPrice = (Spinner) findViewById(R.id.etPrice);
         etQuantity = (Spinner) findViewById(R.id.etQuantity);
+        etQuantityRemaining=(Spinner)findViewById(R.id.etQuantityRemaining);
         btAdd = (Button) findViewById(R.id.btnAdd);
         mbtnDelete = (Button) findViewById(R.id.btnDelete);
 
 
-        itemNameEt =(EditText)findViewById(R.id.itemNameEt);
-        brandEt =(EditText)findViewById(R.id.brandEt);
-        priceEt =(EditText)findViewById(R.id.priceEt);
-        quantityEt=(EditText)findViewById(R.id.quantityEt);
-
+        itemNameEt =(TextView) findViewById(R.id.itemNameEt);
+        brandEt =(TextView)findViewById(R.id.brandEt);
+        priceEt =(TextView)findViewById(R.id.priceEt);
+        quantityEt=(TextView)findViewById(R.id.quantityEt);
+        quantityRemainingEt=(TextView)findViewById(R.id.quantityRemainingEt);
+        TVQuantityRemaining=(TextView)findViewById(R.id.TVQuantityRemaining);
 
 
         btAdd.setOnClickListener(this);
@@ -80,6 +88,27 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
 
 
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
+
+        adapterQuantityRemaining = ArrayAdapter.createFromResource(this,
+                R.array.list_quantityRemaining, android.R.layout.simple_spinner_item);
+
+        adapterQuantityRemaining.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        etQuantityRemaining.setAdapter(adapterQuantityRemaining);
+
+        etQuantityRemaining.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String value = (String) adapterQuantityRemaining.getItem(position);
+                quantityRemainingEt.setText(value);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
         adapterItemName = ArrayAdapter.createFromResource(this,
@@ -184,9 +213,18 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         if (fromPage.equals("INVENTORY")) {
             btAdd.setText("UPDATE");
             getData();
+            etName.setVisibility(View.INVISIBLE);
+            etBrand.setVisibility(View.INVISIBLE);
+            etPrice.setVisibility(View.INVISIBLE);
+            etQuantity.setVisibility(View.INVISIBLE);
         }
         else {
+
+
             mbtnDelete.setVisibility(View.INVISIBLE);
+            TVQuantityRemaining.setVisibility(View.INVISIBLE);
+            quantityRemainingEt.setVisibility(View.INVISIBLE);
+            etQuantityRemaining.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -283,8 +321,8 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
                 brandEt.setText(inventory.itemBrand);
                 priceEt.setText(inventory.itemPrice);
                 quantityEt.setText(inventory.itemQuantity);
-                itemNameEt.setFocusable(false);
-                brandEt.setFocusable(false);
+                quantityRemainingEt.setText(inventory.itemQuantityRemaining);
+
             }
 
             @Override
@@ -302,6 +340,7 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         itemBrand = brandEt.getText().toString();
         itemPrice = priceEt.getText().toString();
         itemQuantity = quantityEt.getText().toString();
+        itemQuantityRemaining=quantityRemainingEt.getText().toString();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("inventory");
 
@@ -312,7 +351,7 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
             key = itemName + " " + itemBrand;
         }
 
-        Inventory inventory = new Inventory(itemName, itemBrand, itemPrice, itemQuantity);
+        Inventory inventory = new Inventory(itemName, itemBrand, itemPrice, itemQuantity,itemQuantityRemaining);
         Map<String, Object> inventoryValue = inventory.toMap();
         Map<String, Object> inventoryPut = new HashMap<>();
         inventoryPut.put(itemName + " " + itemBrand
@@ -340,16 +379,19 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         public String itemBrand;
         public String itemPrice;
         public String itemQuantity;
+        public String itemQuantityRemaining;
+
 
         public Inventory() {
 
         }
 
-        public Inventory(String itemName, String itemBrand, String itemPrice, String itemQuantity) {
+        public Inventory(String itemName, String itemBrand, String itemPrice, String itemQuantity ,String itemQuantityRemaining) {
             this.itemName = itemName;
             this.itemBrand = itemBrand;
             this.itemPrice = itemPrice;
             this.itemQuantity = itemQuantity;
+            this.itemQuantityRemaining=itemQuantityRemaining;
         }
 
 
@@ -360,6 +402,7 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
             result.put("itemBrand", itemBrand);
             result.put("itemPrice", itemPrice);
             result.put("itemQuantity", itemQuantity);
+            result.put("itemQuantityRemaining", itemQuantityRemaining);
             return result;
         }
 

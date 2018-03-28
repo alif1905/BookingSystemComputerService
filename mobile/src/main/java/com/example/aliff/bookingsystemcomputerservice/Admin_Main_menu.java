@@ -26,24 +26,27 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
     private String accesslevel;
     private Button mBookings;
     private Intent intent;
-
+    private Button mMFinancial;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin__main_menu);
 
-        mLogoutAdmin = findViewById(R.id.LogoutAdmin);
-        mProfileAdmin = findViewById(R.id.ProfileAdmin);
-        mRegisterAdmin = findViewById(R.id.RegisterAdmin);
+        mMFinancial=(Button)findViewById(R.id.btnFinancial);
+        mLogoutAdmin =(Button) findViewById(R.id.LogoutAdmin);
+        mProfileAdmin =(Button) findViewById(R.id.ProfileAdmin);
+        mRegisterAdmin =(Button) findViewById(R.id.RegisterAdmin);
         mBookings = (Button) findViewById(R.id.btnBookings);
         mRecordInventory = (Button) findViewById(R.id.btnRecordInventory);
+
+
 
         mBookings.setOnClickListener(this);
         mRegisterAdmin.setOnClickListener(this);
         mProfileAdmin.setOnClickListener(this);
         mLogoutAdmin.setOnClickListener(this);
         mRecordInventory.setOnClickListener(this);
-
+        mMFinancial.setOnClickListener(this);
     }
 
 
@@ -53,6 +56,13 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         Intent intent;
 
         switch (view.getId()) {
+
+
+            case R.id.btnFinancial:
+                intent = new Intent(Admin_Main_menu.this, Manage_Financial.class);
+                startActivity(intent);
+                finish();
+                break;
 
             case R.id.btnRecordInventory:
                 intent = new Intent(Admin_Main_menu.this, inventory_list.class);
@@ -85,6 +95,8 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
                 finish();
 
                 break;
+
+
         }
 
     }

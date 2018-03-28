@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:text="Record Inventory"/>
     <Button
+       android:id="@+id/btnFinancial"
         android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:textSize="15dp"

@@ -32,7 +32,10 @@
         <activity android:name=".bookingsList" />
         <activity android:name=".displayBooking" />
         <activity android:name=".inventory_list" />
-        <activity android:name=".inventory_form"></activity>
+        <activity android:name=".inventory_form" />
+        <activity android:name=".CustomerInvoice" />
+        <activity android:name=".Manage_Financial" />
+        <activity android:name=".FinancialInventoryInvoice"></activity>
     </application>
 
 </manifest>
