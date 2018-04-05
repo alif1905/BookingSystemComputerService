@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -89,7 +90,6 @@ public class Admin_register extends AppCompatActivity {
                 Customer_Main_menu.Auth auth = dataSnapshot.getValue(Customer_Main_menu.Auth.class);
                 accesslevel = auth.accessLevel;
                 if (!accesslevel.equals("Admin")) {
-                    Toast.makeText(getApplicationContext(), "Login failed, please Login as Admin...", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(Admin_register.this, MainActivity.class);
                     startActivity(i);
                     finish();
@@ -137,58 +137,86 @@ public class Admin_register extends AppCompatActivity {
     private void startRegister(){
         final String textEditorEmail = eEmail.getText().toString().trim();
 
-
         if(TextUtils.isEmpty(textEditorEmail)){
             Toast.makeText(Admin_register.this, "Email is required", Toast.LENGTH_SHORT).show();
             return;
         }
+
+//
         final String textEditorPassword = ePassword.getText().toString().trim();
         if (textEditorPassword.length() < 6) {
             Toast.makeText(Admin_register.this, "Your password must have at least 6 characters", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
         final String textEditorConfirmPassword = eConfirmPassword.getText().toString().trim();
         if (!textEditorPassword.equals(textEditorConfirmPassword)) {
             Toast.makeText(Admin_register.this, "Password Not Matched", Toast.LENGTH_SHORT).show();
             return;
         }
 
-
-        if((!TextUtils.isEmpty(textEditorEmail)&& !TextUtils.isEmpty(textEditorPassword))){
+        if((!TextUtils.isEmpty(textEditorEmail)&& !TextUtils.isEmpty(textEditorPassword)&& !TextUtils.isEmpty(textEditorConfirmPassword))){
 
             final ProgressDialog progressDialog = ProgressDialog.show(Admin_register.this, "Please wait...", "Processing...",true);
 
             mAuth.createUserWithEmailAndPassword(textEditorEmail,textEditorPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    progressDialog.dismiss();
 
-                    if(task.isSuccessful()) {
+
+                    if (!task.isSuccessful())
+                    {
+                        progressDialog.dismiss();
+
+                        try
+                        {
+                            throw task.getException();
+                        }
+                        // if user enters wrong email.
+                        catch (FirebaseAuthUserCollisionException invalidEmail)
+                        {
+
+                            Toast.makeText(Admin_register.this, "Email are existed", Toast.LENGTH_SHORT).show();
+
+
+                            // TODO: take your actions!
+                        }
+
+
+
+
+
+                        catch (Exception e)
+                        {
+
+                        }
+
+
+
+                    }
+
+                    else{
 
                         String user_id = mAuth.getCurrentUser().getUid();
                         DatabaseReference current_user_db = mDatabaseRef.child(user_id);
                         current_user_db.child("Email").setValue(textEditorEmail);
-                        current_user_db.child("accessLevel").setValue("Admin");
+                        current_user_db.child("accessLevel").setValue("Customer");
+
 
                         Toast.makeText(Admin_register.this, "Successfull Registered", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Admin_register.this, Admin_login.class);
                         startActivity(intent);
                         finish();
-
-                    }else{
-                        Log.e("Register error...", task.getException().toString());
-                        Toast.makeText(Admin_register.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-
                     }
-
                 }
+
+
 
             });
         }
 
     }
-
-
 
 
 }

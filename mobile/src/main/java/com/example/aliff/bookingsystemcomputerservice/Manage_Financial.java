@@ -6,10 +6,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+
 public class Manage_Financial extends AppCompatActivity implements View.OnClickListener {
 
     private Button mBackbtn,mCustomerInvoice,mBtnInventoriInvoice;
     private Intent intent;
+
+
+    private DatabaseReference myRef;
+    private FirebaseAuth mAuth;
+    private String userid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,4 +68,34 @@ public class Manage_Financial extends AppCompatActivity implements View.OnClickL
                     break;
         }
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Manage_Financial.this, Admin_Main_menu.class);
+        startActivity(i);
+        finish();
+    }
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent i = new Intent(Manage_Financial.this, MainActivity
+                    .class);
+            startActivity(i);
+        }
+
+        userid = currentUser.getUid();
+
+
+    }
+
+
 }

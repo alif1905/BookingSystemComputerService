@@ -18,15 +18,7 @@
 
 
 
-        <TextView
-            android:id="@+id/DisplayTimeAndDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Display TIme And Date"
-            android:textSize="20sp"
-            tools:ignore="HardcodedText,LabelFor,TextViewEdits"/>
+
         <TextView
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
@@ -80,6 +72,21 @@
             android:id="@+id/editTextModel"
             android:inputType="text"/>
 
+        <TextView
+            android:id="@+id/DatePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Select Date"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText,LabelFor,TextViewEdits"/>
+
+        <EditText
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editTextDate"
+            android:inputType="text"/>
         <TextView
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"

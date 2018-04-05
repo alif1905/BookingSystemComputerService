@@ -35,7 +35,8 @@
         <activity android:name=".inventory_form" />
         <activity android:name=".CustomerInvoice" />
         <activity android:name=".Manage_Financial" />
-        <activity android:name=".FinancialInventoryInvoice"></activity>
+        <activity android:name=".FinancialInventoryInvoice" />
+        <activity android:name=".UpdateBooking"></activity>
     </application>
 
 </manifest>

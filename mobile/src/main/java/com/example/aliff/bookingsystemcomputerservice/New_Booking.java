@@ -32,15 +32,16 @@ import java.util.Map;
 public class New_Booking extends AppCompatActivity implements View.OnClickListener {
     private DatabaseReference mDatabaseRef;
     private Button mBackBtn,mBtnSubmit;
-    private TextView mDisplayTimeDate, mModel, mAddress, mphoneCust;
-    private EditText mEditModel, mEditAddress, mEditPhone;
+    private TextView  mModel, mAddress, mphoneCust,mdateCust;
+    private EditText mEditModel, mEditAddress, mEditPhone,mEditDatePicker;
     private Spinner mspinnerService, mspinnerBrand, mSpinnerTime;
     private String accesslevel;
+    private int mYear, mMonth, mDay;
 
     private FirebaseAuth mAuth;
     ArrayAdapter<CharSequence> adapterService, adapterbrand, adapterTime;
 
-    private String userid, dateDb, serviceDb, brandDb, modelDb, pickupTimeDb, addressDb, phoneNoDb;
+    private String userid,serviceDb, brandDb, modelDb, pickupTimeDb, addressDb, phoneNoDb,dateDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +58,18 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
         mspinnerBrand = findViewById(R.id.spinnerBrand);
         mSpinnerTime = findViewById(R.id.spinnerSelecttimePicker);
 
-        mDisplayTimeDate = findViewById(R.id.DisplayTimeAndDate);
+
         mModel = findViewById(R.id.model);
         mAddress = findViewById(R.id.addressCust);
         mphoneCust = findViewById(R.id.PhoneCust);
+        mdateCust=findViewById(R.id.DatePicker);
+
 
         mEditModel = findViewById(R.id.editTextModel);
         mEditAddress = findViewById(R.id.editTextAddressCust);
         mEditPhone = findViewById(R.id.editTextphoneCust);
+        mEditDatePicker = findViewById(R.id.editTextDate);
 
-        updateTimeDate();
 
 
         adapterService = ArrayAdapter.createFromResource(this,
@@ -135,6 +138,8 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
         mBackBtn.setOnClickListener(this);
 
         mBtnSubmit.setOnClickListener(this);
+
+        mEditDatePicker.setOnClickListener(this);
     }
 
 
@@ -152,7 +157,37 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
 
                 break;
+
+            case R.id.editTextDate:
+
+                datePicker(view);
+                break;
         }
+    }
+
+    private void datePicker(View view) {
+
+        if (view == mEditDatePicker) {
+            final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+
+                            mEditDatePicker.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
+                        }
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.show();
+        }
+
     }
 
     @Override
@@ -184,7 +219,14 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
         addressDb = mEditAddress.getText().toString();
         phoneNoDb = mEditPhone.getText().toString();
-        dateDb = mDisplayTimeDate.getText().toString();
+        dateDb = mEditDatePicker.getText().toString();
+
+        if (TextUtils.isEmpty(dateDb)) {
+            Toast.makeText(New_Booking.this, "Select Date", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
 
         if (TextUtils.isEmpty(modelDb)) {
             Toast.makeText(New_Booking.this, "Model PC/Laptop is required", Toast.LENGTH_SHORT).show();
@@ -223,29 +265,5 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
 
 
-    DateFormat formatDateTime = DateFormat.getDateTimeInstance();
-    Calendar dateTime = Calendar.getInstance();
-    int day, month, year;
-    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            dateTime.set(Calendar.YEAR, year);
-            dateTime.set(Calendar.MONTH, month);
-            dateTime.set(Calendar.DAY_OF_MONTH, day);
-            updateTimeDate();
-
-
-        }
-    };
-
-    private void updateDate() {
-        new DatePickerDialog(this, d, dateTime.get(Calendar.YEAR), dateTime.get(Calendar.MONTH), dateTime.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-
-    private void updateTimeDate() {
-        mDisplayTimeDate.setText(formatDateTime.format(dateTime.getTime()));
-    }
 
 }

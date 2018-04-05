@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,6 +26,7 @@ public class Customer_register extends AppCompatActivity {
     private TextView tEmail,tPassword,tConfirmPassword,tSignin;
     private EditText eEmail,ePassword,eConfirmPassword;
     private Button btnSignUp;
+    private String accesslevel;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabaseRef;
@@ -65,54 +69,96 @@ public class Customer_register extends AppCompatActivity {
             }
         });
     }
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Customer_register.this, Customer_LoginActivity.class);
+        i.putExtra("ACCESSLEVEL", accesslevel);
+        startActivity(i);
+        finish();
+    }
     private void startRegister(){
-
+//
         final String textEditorEmail = eEmail.getText().toString().trim();
-
 
         if(TextUtils.isEmpty(textEditorEmail)){
             Toast.makeText(Customer_register.this, "Email is required", Toast.LENGTH_SHORT).show();
             return;
         }
+
+//
         final String textEditorPassword = ePassword.getText().toString().trim();
         if (textEditorPassword.length() < 6) {
             Toast.makeText(Customer_register.this, "Your password must have at least 6 characters", Toast.LENGTH_SHORT).show();
             return;
         }
+
+
         final String textEditorConfirmPassword = eConfirmPassword.getText().toString().trim();
         if (!textEditorPassword.equals(textEditorConfirmPassword)) {
             Toast.makeText(Customer_register.this, "Password Not Matched", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if((!TextUtils.isEmpty(textEditorEmail)&& !TextUtils.isEmpty(textEditorPassword)&& !TextUtils.isEmpty(textEditorConfirmPassword))){
+       if((!TextUtils.isEmpty(textEditorEmail)&& !TextUtils.isEmpty(textEditorPassword)&& !TextUtils.isEmpty(textEditorConfirmPassword))){
 
             final ProgressDialog progressDialog = ProgressDialog.show(Customer_register.this, "Please wait...", "Processing...",true);
 
             mAuth.createUserWithEmailAndPassword(textEditorEmail,textEditorPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    progressDialog.dismiss();
 
-                    if(task.isSuccessful()) {
+
+                    if (!task.isSuccessful())
+                    {
+                        progressDialog.dismiss();
+
+                        try
+                        {
+                            throw task.getException();
+                        }
+                        // if user enters wrong email.
+                        catch (FirebaseAuthUserCollisionException invalidEmail)
+                        {
+
+                            Toast.makeText(Customer_register.this, "Email are existed", Toast.LENGTH_SHORT).show();
+
+
+                            // TODO: take your actions!
+                        }
+
+
+
+
+
+                        catch (Exception e)
+                        {
+
+                        }
+
+
+
+                    }
+
+                    else{
 
                         String user_id = mAuth.getCurrentUser().getUid();
                         DatabaseReference current_user_db = mDatabaseRef.child(user_id);
                         current_user_db.child("Email").setValue(textEditorEmail);
                         current_user_db.child("accessLevel").setValue("Customer");
 
+
                         Toast.makeText(Customer_register.this, "Successfull Registered", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Customer_register.this, Customer_LoginActivity.class);
-                        startActivity(intent);
+                       Intent intent = new Intent(Customer_register.this, Customer_LoginActivity.class);
+                       startActivity(intent);
                         finish();
-
-                    }else{
-                        Log.e("Register error...", task.getException().toString());
-                        Toast.makeText(Customer_register.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-
                     }
-
                 }
+
+
 
             });
         }
@@ -120,6 +166,6 @@ public class Customer_register extends AppCompatActivity {
     }
 
 
-
-
 }
+
+
