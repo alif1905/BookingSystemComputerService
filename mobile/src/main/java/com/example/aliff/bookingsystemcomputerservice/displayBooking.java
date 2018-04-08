@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,14 +31,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class displayBooking extends AppCompatActivity {
+public class displayBooking extends AppCompatActivity implements View.OnClickListener {
     private String userid, value;
     private FirebaseAuth mAuth;
+    private DatabaseReference myRef;
 
-    private TextView tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService,tvDate;
+    private TextView tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService, tvDate,tvReason;
+
     private String accesslevel;
     private String CustId;
-    private DatabaseReference myRef;
     private ProgressDialog progressDialog;
     private Button mBtnReject;
     private Button mBtnAccept;
@@ -56,15 +58,19 @@ public class displayBooking extends AppCompatActivity {
 
         mBtnAccept = (Button) findViewById(R.id.btnAccept);
         mBtnReject = (Button) findViewById(R.id.btnReject);
-        tvDate=(TextView)findViewById(R.id.tvDate);
+        tvDate = (TextView) findViewById(R.id.tvDate);
         tvAdd = (TextView) findViewById(R.id.tvAddress);
         tvBrand = (TextView) findViewById(R.id.tvBrand);
         tvModel = (TextView) findViewById(R.id.tvModel);
         tvPhone = (TextView) findViewById(R.id.tvPhoneNo);
         tvPick = (TextView) findViewById(R.id.tvPickUpTime);
         tvService = (TextView) findViewById(R.id.tvServiceType);
+        tvReason = (TextView) findViewById(R.id.tvReason);
         progressDialog = ProgressDialog.show(displayBooking.this, "Please wait...", "Processing...", true);
 //
+
+        mBtnAccept.setOnClickListener(this);
+        mBtnReject.setOnClickListener(this);
 
         if (accesslevel.equals("USER")) {
             mBtnAccept.setVisibility(View.INVISIBLE);
@@ -73,6 +79,39 @@ public class displayBooking extends AppCompatActivity {
             mBtnAccept.setVisibility(View.VISIBLE);
             mBtnReject.setVisibility(View.VISIBLE);
         }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnAccept:
+                acceptRequest();
+                break;
+            case R.id.btnReject:
+                Intent i = new Intent(displayBooking.this, UpdateBooking.class);
+                i.putExtra("userid", CustId);
+                i.putExtra("value", value);
+                startActivity(i);
+
+                break;
+        }
+
+    }
+
+    public void acceptRequest() {
+
+
+        Toast.makeText(getApplicationContext(), "acceptRequest Triggered", Toast.LENGTH_LONG).show();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        if (accesslevel.equals("USER")) {
+            myRef = database.getReference().child("Bookings").child(userid).child(value);
+        } else {
+            myRef = database.getReference().child("Bookings").child(CustId).child(value);
+        }
+
+        myRef.child("isAccepted").setValue(true);
 
     }
 
@@ -214,6 +253,8 @@ public class displayBooking extends AppCompatActivity {
                 tvPhone.setText(service.PhoneNo);
                 tvPick.setText(service.PickupTime);
                 tvService.setText(service.Service);
+                tvReason.setText(service.Reason);
+
                 //   Toast.makeText(getApplicationContext(), service.Status.get(0),Toast.LENGTH_LONG).show();
 
 
@@ -234,31 +275,38 @@ public class displayBooking extends AppCompatActivity {
 
     }
 
+
     @IgnoreExtraProperties
     public static class Services {
-        public  String Date;
+        public String Date;
         public String Address;
         public String Model;
         public String PhoneNo;
         public String PickupTime;
         public String Service;
         public String Brand;
+        public String Reason;
+        public boolean isAccepted;
+        public boolean isUpdated;
+
         public Services() {
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Services(String address, String model, String phoneNo, String pickupTime, String service, String brand,String date) {
-            Date=date;
-            Address = address;
-            Model = model;
-            PhoneNo = phoneNo;
-            PickupTime = pickupTime;
-            Service = service;
-            Brand = brand;
+        public Services(String address, String model, String phoneNo, String pickupTime, String service, String brand, String date, String reason, boolean isAccepted, boolean isUpdated) {
+            this.Date = date;
+            this.Address = address;
+            this.Model = model;
+            this.PhoneNo = phoneNo;
+            this.PickupTime = pickupTime;
+            this.Service = service;
+            this.Brand = brand;
+            this.Reason = reason;
+            this.isAccepted = isAccepted;
+            this.isUpdated = isUpdated;
+
         }
     }
-
-
 
 
 }

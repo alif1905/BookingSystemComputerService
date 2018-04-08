@@ -28,10 +28,10 @@
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Date" />
+                android:text="Time" />
 
             <Spinner
-                android:id="@+id/tvDate"
+                android:id="@+id/spinnerTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -53,14 +53,14 @@
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Pick Up Time" />
+                android:text="Date" />
 
-            <TextView
-                android:id="@+id/tvPickUpTime"
+            <EditText
+                android:id="@+id/etDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                />
         </LinearLayout>
 
 
@@ -81,7 +81,7 @@
                 android:text="Notice" />
 
             <EditText
-                android:id="@+id/tvReason"
+                android:id="@+id/etReason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -99,11 +99,11 @@
             android:text="Submt" />
 
         <Button
-            android:id="@+id/btnReject"
+            android:id="@+id/btnCancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Back" />
+            android:text="Cancel" />
 
     </LinearLayout>
 
