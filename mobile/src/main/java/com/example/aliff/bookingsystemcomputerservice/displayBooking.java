@@ -32,18 +32,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class displayBooking extends AppCompatActivity implements View.OnClickListener {
-    private String userid, value;
-    private FirebaseAuth mAuth;
-    private DatabaseReference myRef;
-
-    private TextView tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService, tvDate,tvReason;
 
     private String accesslevel;
     private String CustId;
+    private String userid, value;
+    private FirebaseAuth mAuth;
+    private DatabaseReference myRef;
+    private TextView tvStatus,tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService, tvDate,tvReason,tvCharge,tvRepairType;
+    private TextView titlereason,titleRepaired,titleCharge;
+
     private ProgressDialog progressDialog;
     private Button mBtnReject;
     private Button mBtnAccept;
-
+    private Button mDoneService;
+    private Menu menu;
+    private boolean disable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +58,21 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         value = intent.getStringExtra("Value");
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
-
+        mDoneService=(Button)findViewById(R.id.btnDoneService);
         mBtnAccept = (Button) findViewById(R.id.btnAccept);
         mBtnReject = (Button) findViewById(R.id.btnReject);
         tvDate = (TextView) findViewById(R.id.tvDate);
+
+
+
+        titleCharge = (TextView) findViewById(R.id.CostCharge);
+        titlereason = (TextView) findViewById(R.id.giveReason);
+        titleRepaired = (TextView) findViewById(R.id.RepairedPart);
+
+
+        tvCharge = (EditText) findViewById(R.id.tvCostCharge);
+        tvRepairType = (TextView) findViewById(R.id.tvRepairedType);
+        tvStatus = (TextView) findViewById(R.id.tvStatusService);
         tvAdd = (TextView) findViewById(R.id.tvAddress);
         tvBrand = (TextView) findViewById(R.id.tvBrand);
         tvModel = (TextView) findViewById(R.id.tvModel);
@@ -72,21 +86,68 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         mBtnAccept.setOnClickListener(this);
         mBtnReject.setOnClickListener(this);
 
+
         if (accesslevel.equals("USER")) {
-            mBtnAccept.setVisibility(View.INVISIBLE);
-            mBtnReject.setVisibility(View.INVISIBLE);
+
+            mDoneService.setVisibility(View.GONE);
+            tvReason.setVisibility(View.GONE);
+            titlereason.setVisibility(View.GONE);
+            tvRepairType.setVisibility(View.GONE);
+            tvCharge.setVisibility(View.GONE);
+
+            titleRepaired.setVisibility(View.GONE);
+            titleCharge.setVisibility(View.GONE);
+            disable=false;
+
         } else {
+
+            tvRepairType.setVisibility(View.GONE);
+            tvCharge.setVisibility(View.GONE);
+
+            titleRepaired.setVisibility(View.GONE);
+            titleCharge.setVisibility(View.GONE);
             mBtnAccept.setVisibility(View.VISIBLE);
             mBtnReject.setVisibility(View.VISIBLE);
+            mDoneService.setVisibility(View.GONE);
         }
+
+
+
+
 
     }
 
     @Override
     public void onClick(View view) {
+
+
         switch (view.getId()) {
             case R.id.btnAccept:
-                acceptRequest();
+
+                AlertDialog alertDialog = new AlertDialog.Builder(displayBooking.this).create();
+                alertDialog.setTitle("Accept Request");
+                alertDialog.setMessage("Are you sure accept this booking?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, int which) {
+                                Intent i = new Intent(displayBooking.this, displayBooking.class);
+
+                            acceptRequest();
+
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                               dialog.dismiss();
+
+                            }
+                        });
+                alertDialog.show();
+
+
+
                 break;
             case R.id.btnReject:
                 Intent i = new Intent(displayBooking.this, UpdateBooking.class);
@@ -99,42 +160,162 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
     }
 
+
+
+//    public void cancelBookingHide(){
+//
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        myRef = database.getReference().child("Bookings").child(userid).child(value).child("Status");
+//        myRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                String hide=dataSnapshot.getValue(String.class);
+//
+//
+//                if (hide.equals("Request Accepted")) {
+//
+//
+//                    tvRepairType.setVisibility(View.VISIBLE);
+//                    tvCharge.setVisibility(View.VISIBLE);
+//
+//                    titleRepaired.setVisibility(View.VISIBLE);
+//                    titleCharge.setVisibility(View.VISIBLE);
+//                    tvReason.setVisibility(View.GONE);
+//                    mBtnAccept.setVisibility(View.GONE);
+//                    mBtnReject.setVisibility(View.GONE);
+//                    mDoneService.setVisibility(View.VISIBLE);
+//                    disable=true;
+//
+//
+//
+//
+//                }
+//                else {
+//
+//                    tvRepairType.setVisibility(View.GONE);
+//                    tvCharge.setVisibility(View.GONE);
+//
+//                    titleRepaired.setVisibility(View.GONE);
+//                    titleCharge.setVisibility(View.GONE);
+//                    tvReason.setVisibility(View.GONE);
+//                    mBtnAccept.setVisibility(View.GONE);
+//                    mBtnReject.setVisibility(View.GONE);
+//                    mDoneService.setVisibility(View.GONE);
+//                    disable=false;
+//                }
+//
+//
+//
+//
+//                Toast.makeText(getApplication(),hide,Toast.LENGTH_LONG).show();
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+
+    public void hideButton(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+        String hide=dataSnapshot.getValue(String.class);
+
+
+                if (hide.equals("Request Accepted")) {
+                    tvRepairType.setVisibility(View.VISIBLE);
+                    tvCharge.setVisibility(View.VISIBLE);
+
+                    titleRepaired.setVisibility(View.VISIBLE);
+                    titleCharge.setVisibility(View.VISIBLE);
+                    tvReason.setVisibility(View.GONE);
+                    mBtnAccept.setVisibility(View.GONE);
+                    mBtnReject.setVisibility(View.GONE);
+                    mDoneService.setVisibility(View.VISIBLE);
+                    disable=true;
+
+                }
+
+
+                Toast.makeText(getApplication(),hide,Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+
+
+
+
     public void acceptRequest() {
 
 
         Toast.makeText(getApplicationContext(), "acceptRequest Triggered", Toast.LENGTH_LONG).show();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
+        myRef.setValue("Request Accepted");
+        getBookings();
+        disable=true;
+//        if (accesslevel.equals("USER")) {
+//            myRef = database.getReference().child("Bookings").child(userid).child(value);
+//        } else {
+//            myRef = database.getReference().child("Bookings").child(CustId).child(value);
+//        }
 
-        if (accesslevel.equals("USER")) {
-            myRef = database.getReference().child("Bookings").child(userid).child(value);
-        } else {
-            myRef = database.getReference().child("Bookings").child(CustId).child(value);
-        }
-
-        myRef.child("isAccepted").setValue(true);
 
     }
 
 
-    @Override
+
+@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if (accesslevel.equals("USER")) {
             super.onCreateOptionsMenu(menu);
             getMenuInflater().inflate(R.menu.displaybookingsmenu, menu);
-        } else {
-        }
-        return true;
 
+
+        } else {
+
+
+
+
+        }
+
+        return true;
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(displayBooking.this, bookingsList.class);
-        i.putExtra("ACCESSLEVEL", accesslevel);
-        startActivity(i);
-        finish();
+
+        if(accesslevel.equals("USER")){
+
+            Intent i = new Intent(displayBooking.this, bookingsList.class);
+            i.putExtra("ACCESSLEVEL", accesslevel);
+            startActivity(i);
+            finish();
+        }
+
+        else {
+
+            Intent i = new Intent(displayBooking.this, bookingsList.class);
+            i.putExtra("ACCESSLEVEL", accesslevel);
+            startActivity(i);
+            finish();
+        }
     }
 
     @Override
@@ -150,11 +331,24 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
             case R.id.cancle:
 
-                delete();
+
+                if (!disable) {
+
+                    delete();
+
+                    break;
+                } else {
+
+                    Toast.makeText(getApplicationContext(),"You are cannot cancel this booking",Toast.LENGTH_LONG).show();
                 break;
+                }
+
 
 
         }
+
+
+
         return true;
     }
 
@@ -199,7 +393,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-
+                        disable=true;
                         Intent i = new Intent(displayBooking.this, bookingsList.class);
                         i.putExtra("ACCESSLEVEL", accesslevel);
                         startActivity(i);
@@ -227,52 +421,116 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
         getBookings();
 
+        if(accesslevel.equals("ADMIN")){
+            hideButton();
+        }
+        else{
+
+            mBtnAccept.setVisibility(View.GONE);
+            mBtnReject.setVisibility(View.GONE);
+//            cancelBookingHide();
+
+
+        }
+
     }
 
     public void getBookings() {
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        if(accesslevel.equals("USER")) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-        if (accesslevel.equals("USER")) {
-            myRef = database.getReference().child("Bookings").child(userid).child(value);
-        } else {
-            myRef = database.getReference().child("Bookings").child(CustId).child(value);
+            if (accesslevel.equals("USER")) {
+                myRef = database.getReference().child("Bookings").child(userid).child(value);
+            } else {
+                myRef = database.getReference().child("Bookings").child(CustId).child(value);
+            }
+
+            Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Services service = dataSnapshot.getValue(Services.class);
+                    tvDate.setText(service.Date);
+                    tvAdd.setText(service.Address);
+                    tvBrand.setText(service.Brand);
+                    tvModel.setText(service.Model);
+                    tvPhone.setText(service.PhoneNo);
+                    tvPick.setText(service.PickupTime);
+                    tvService.setText(service.Service);
+                    tvReason.setText(service.Reason);
+
+                    tvStatus.setText(service.Status);
+                    //   Toast.makeText(getApplicationContext(), service.Status.get(0),Toast.LENGTH_LONG).show();
+
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("bookingsList", "Failed to read value.", error.toException());
+                }
+
+
+            });
         }
 
-        Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Services service = dataSnapshot.getValue(Services.class);
-                tvDate.setText(service.Date);
-                tvAdd.setText(service.Address);
-                tvBrand.setText(service.Brand);
-                tvModel.setText(service.Model);
-                tvPhone.setText(service.PhoneNo);
-                tvPick.setText(service.PickupTime);
-                tvService.setText(service.Service);
-                tvReason.setText(service.Reason);
-
-                //   Toast.makeText(getApplicationContext(), service.Status.get(0),Toast.LENGTH_LONG).show();
+        else{
 
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 1000);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+            if (accesslevel.equals("USER")) {
+                myRef = database.getReference().child("Bookings").child(userid).child(value);
+            } else {
+                myRef = database.getReference().child("Bookings").child(CustId).child(value);
             }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("bookingsList", "Failed to read value.", error.toException());
-            }
-        });
+            Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Services service = dataSnapshot.getValue(Services.class);
+                    tvDate.setText(service.Date);
+                    tvAdd.setText(service.Address);
+                    tvBrand.setText(service.Brand);
+                    tvModel.setText(service.Model);
+                    tvPhone.setText(service.PhoneNo);
+                    tvPick.setText(service.PickupTime);
+                    tvService.setText(service.Service);
+                    tvReason.setText(service.Reason);
+                    tvStatus.setText(service.Status);
+                    //   Toast.makeText(getApplicationContext(), service.Status.get(0),Toast.LENGTH_LONG).show();
+
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    }, 1000);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("bookingsList", "Failed to read value.", error.toException());
+                }
+
+
+            });
+        }
     }
 
 
@@ -286,6 +544,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         public String Service;
         public String Brand;
         public String Reason;
+        public String Status;
+
         public boolean isAccepted;
         public boolean isUpdated;
 
@@ -293,7 +553,9 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Services(String address, String model, String phoneNo, String pickupTime, String service, String brand, String date, String reason, boolean isAccepted, boolean isUpdated) {
+        public Services(String status,String address, String model, String phoneNo, String pickupTime, String service, String brand, String date, String reason, boolean isAccepted, boolean isUpdated) {
+
+            this.Status = status;
             this.Date = date;
             this.Address = address;
             this.Model = model;

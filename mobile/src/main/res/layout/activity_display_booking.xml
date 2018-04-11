@@ -261,12 +261,14 @@
                 android:layout_weight="1"
                 android:text="Charge (RM)" />
 
-            <TextView
+           <EditText
                 android:id="@+id/tvCostCharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:hint="Total Charge"
+               android:inputType="numberDecimal"
+               />
 
         </LinearLayout>
 
@@ -280,6 +282,13 @@
             android:layout_weight="1"
             android:background="@android:color/holo_green_light"
             android:text="Accept" />
+
+        <Button
+            android:id="@+id/btnDoneService"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+             android:text="Done Service" />
 
         <Button
             android:id="@+id/btnReject"

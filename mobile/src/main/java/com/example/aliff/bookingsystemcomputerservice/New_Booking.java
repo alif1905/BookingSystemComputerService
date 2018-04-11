@@ -153,6 +153,9 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
                 break;
 
             case R.id.BtnBookServiceCust:
+
+
+
                 submitForm();
 
 
@@ -254,6 +257,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             current_user_db.child("Address").setValue(addressDb);
             current_user_db.child("PhoneNo").setValue(phoneNoDb);
             current_user_db.child("Reason").setValue(".");
+            current_user_db.child("Status").setValue("Request Pending");
             current_user_db.child("isUpdated").setValue(false);
             current_user_db.child("isAccepted").setValue(false);
 

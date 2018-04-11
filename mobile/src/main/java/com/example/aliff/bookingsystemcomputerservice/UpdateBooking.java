@@ -14,12 +14,19 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
 public class UpdateBooking extends AppCompatActivity implements View.OnClickListener {
+
+
+    private String accesslevel;
+    private String CustId;
+
+
 
     private String userid, value;
     private FirebaseAuth mAuth;
@@ -38,6 +45,12 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_update_booking);
 
         Intent intent = getIntent();
+
+
+        CustId = intent.getStringExtra("CustID");
+        value = intent.getStringExtra("Value");
+        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
 
         userid = intent.getStringExtra("userid");
         value = intent.getStringExtra("value");
@@ -110,9 +123,25 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnUpdateRequest :
-                updateDetail();
+
+
+                if(accesslevel.equals("USER")){
+                    updateDetail();
+                    Intent i = new Intent(UpdateBooking.this, displayBooking.class);
+                    startActivity(i);
+
+                }
+                else{
+                    Intent i = new Intent(UpdateBooking.this, displayBooking.class);
+                    startActivity(i);
+                    updateDetail();
+                }
+
                 break;
-            case R.id.btnCancel : break;
+            case R.id.btnCancel :
+                Intent i = new Intent(UpdateBooking.this, displayBooking.class);
+                startActivity(i);
+                break;
             case R.id.etDate:
 
                 datePicker(view);
@@ -139,5 +168,20 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
 
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent i = new Intent(UpdateBooking.this, MainActivity.class);
+            startActivity(i);
+        }
+
+        userid = currentUser.getUid();
+
+
+
+    }
 
 }
