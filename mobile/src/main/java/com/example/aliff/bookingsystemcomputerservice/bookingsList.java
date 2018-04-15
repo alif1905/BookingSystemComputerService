@@ -63,7 +63,7 @@ public class bookingsList extends AppCompatActivity {
 
 
                     Intent i = new Intent(bookingsList.this, displayBooking.class);
-                    i.putExtra("CustID", rootValues.get(itemPosition).toString());
+                    i.putExtra("CustID", rootValues.get(itemPosition));
                     i.putExtra("Value", itemValue);
                     i.putExtra("ACCESSLEVEL", accesslevel);
                     startActivity(i);
@@ -136,7 +136,6 @@ public class bookingsList extends AppCompatActivity {
 
                     } else if (accesslevel.equals("ADMIN")) {
                         for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
-                            String whoReject = RootSnapshot.child("Status").child(userid).getKey();
                             rootValues.add(value);
                             String rootValue = RootSnapshot.getKey().toString();
                             adapter.add(rootValue);
