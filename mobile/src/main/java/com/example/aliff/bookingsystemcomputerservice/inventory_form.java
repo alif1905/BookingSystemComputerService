@@ -203,8 +203,7 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent i = new Intent(inventory_form.this, MainActivity
-                    .class);
+            Intent i = new Intent(inventory_form.this, MainActivity.class);
             startActivity(i);
         }
 

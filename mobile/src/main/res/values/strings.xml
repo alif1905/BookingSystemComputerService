@@ -142,4 +142,16 @@
     <string-array name="price" />
 
 
+    <string name="reason">Price</string>
+    <string-array name="list_reason">
+        <item>--</item>
+        <item>Today Full Booking</item>
+        <item>Sorry, No Staff on duty</item>
+        <item>Today No Service</item>
+        <item>Sorry,Public Holiday</item>
+
+
+    </string-array>
+    <string-array name="reason" />
+
 </resources>
