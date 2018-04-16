@@ -38,6 +38,10 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     private String accesslevel;
     private int mYear, mMonth, mDay;
 
+    
+
+
+
     private FirebaseAuth mAuth;
     ArrayAdapter<CharSequence> adapterService, adapterbrand, adapterTime;
 
@@ -249,6 +253,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
         if ((!TextUtils.isEmpty(modelDb) && !TextUtils.isEmpty(addressDb) && !TextUtils.isEmpty(phoneNoDb))) {
             mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Bookings");
             DatabaseReference current_user_db = mDatabaseRef.child(userid).child(brandDb + " " + modelDb);
+            current_user_db.child("BrandModel").setValue(brandDb+" "+modelDb);
             current_user_db.child("Date").setValue(dateDb);
             current_user_db.child("Service").setValue(serviceDb);
             current_user_db.child("Brand").setValue(brandDb);
@@ -257,6 +262,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             current_user_db.child("Address").setValue(addressDb);
             current_user_db.child("PhoneNo").setValue(phoneNoDb);
             current_user_db.child("Reason").setValue(" ");
+
             current_user_db.child("Status").setValue("Request Pending");
             current_user_db.child("isUpdated").setValue(false);
             current_user_db.child("isAccepted").setValue(false);

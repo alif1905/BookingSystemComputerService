@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -22,10 +24,14 @@ import java.util.Calendar;
 
 public class UpdateBooking extends AppCompatActivity implements View.OnClickListener {
 
+    private String accesslevel;
+    private String CustId;
+
+
     private String userid, value;
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-    private Button submit, cancel;
+    private Button submit;
     private Spinner mSpinnerTime;
     private EditText mEtDate;
     private TextView mEtreason, timeEt;
@@ -44,10 +50,17 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
 
         Intent intent = getIntent();
 
+
+
+        CustId = intent.getStringExtra("CustID");
+
+        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
+
         userid = intent.getStringExtra("userid");
         value = intent.getStringExtra("value");
         submit = (Button)findViewById(R.id.btnUpdateRequest);
-        cancel = (Button)findViewById(R.id.cancel);
+
 
 
         mSpinnerTime=(Spinner)findViewById(R.id.etTime) ;
@@ -58,7 +71,7 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         timeEt = (TextView)findViewById(R.id.timeEt);
 
         submit.setOnClickListener(this);
-        cancel.setOnClickListener(this);
+
         mEtDate.setOnClickListener(this);
 
         adapterTime = ArrayAdapter.createFromResource(this,
@@ -137,13 +150,16 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
     }
 
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnUpdateRequest :
                 updateDetail();
+
                 break;
-            case R.id.cancel : break;
+
             case R.id.dateEt:
 
                 datePicker(view);
@@ -151,20 +167,64 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent i = new Intent(UpdateBooking.this, MainActivity.class);
+            startActivity(i);
+        }
+
+        userid = currentUser.getUid();
+
+
+
+
+    }
 
     public void updateDetail (){
 
         dateDb=mEtDate.getText().toString();
 
+        if (timeEt.getText().equals("--")) {
+            Toast.makeText(UpdateBooking.this, "Select Time", Toast.LENGTH_SHORT).show();
+            return;
 
-        Toast.makeText(getApplicationContext(),"updateRequest Triggered", Toast.LENGTH_LONG).show();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("Bookings").child(userid).child(value);
-        myRef.child("Date").setValue(dateDb);
-        myRef.child("PickupTime").setValue(timeDb);
-        myRef.child("Reason").setValue(reasonDb);
-        myRef.child("Statys").setValue("Updated");
-        myRef.child("isUpdated").setValue(true);
+        }
+
+        if (TextUtils.isEmpty(dateDb)) {
+            Toast.makeText(UpdateBooking.this, "Select Date", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+
+
+        if (mEtreason.getText().equals("--")) {
+            Toast.makeText(UpdateBooking.this, "Select Reason", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
+
+        if ((!TextUtils.isEmpty(dateDb) && !mEtreason.getText().equals("--") && !timeEt.getText().equals("--"))) {
+
+
+            Toast.makeText(getApplicationContext(), "updateRequest Triggered", Toast.LENGTH_LONG).show();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            myRef = database.getReference().child("Bookings").child(userid).child(value);
+            myRef.child("Date").setValue(dateDb);
+            myRef.child("PickupTime").setValue(timeDb);
+            myRef.child("Reason").setValue(reasonDb);
+
+            myRef.child("Status").setValue("Request Updated");
+            myRef.child("isUpdated").setValue(true);
+
+
+        }
+
 
     }
 

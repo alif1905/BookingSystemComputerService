@@ -30,7 +30,7 @@
 
     <string name="time">Select a brand</string>
     <string-array name="list_time">
-
+        <item>--</item>
         <item>10 A.M</item>
         <item>11 A.M</item>
         <item>12 P.M</item>
