@@ -1,9 +1,13 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +43,11 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     private String accesslevel;
     private int mYear, mMonth, mDay;
 
-    
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private int notification_id;
+    private RemoteViews remoteViews;
+    private Context context;
 
 
 
@@ -51,6 +60,18 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__booking);
+
+        //Notification
+        context = this;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        builder = new NotificationCompat.Builder(this);
+
+        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
+        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
+        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
+        remoteViews.setProgressBar(R.id.progressBar,100,40,true);
+
+
 
         Intent intent = getIntent();
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
@@ -162,6 +183,24 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
                 submitForm();
 
+                notification_id = (int) System.currentTimeMillis();
+
+                Intent button_intent = new Intent(this,displayBooking.class);
+                button_intent.putExtra("id",notification_id);
+                PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
+                        button_intent,0);
+
+                remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
+
+                Intent notification_intent = new Intent(context,MainActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+
+                builder.setSmallIcon(R.mipmap.ic_launcher)
+                        .setAutoCancel(true)
+                        .setCustomBigContentView(remoteViews)
+                        .setContentIntent(pendingIntent);
+
+                notificationManager.notify(notification_id,builder.build());
 
                 break;
 
