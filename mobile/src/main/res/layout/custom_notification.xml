@@ -7,8 +7,9 @@
 
     <ImageView
         android:id="@+id/notif_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:foregroundGravity="left"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:src="@android:drawable/ic_dialog_info"
@@ -42,7 +43,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
+        android:text="Enter Booking"
         android:id="@+id/buttonShowNotification"
         android:layout_alignBottom="@+id/notif_icon"
         android:layout_alignParentRight="true"
