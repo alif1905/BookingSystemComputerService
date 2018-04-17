@@ -27,8 +27,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -42,12 +46,13 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     private Spinner mspinnerService, mspinnerBrand, mSpinnerTime;
     private String accesslevel;
     private int mYear, mMonth, mDay;
-
+    private DatabaseReference myRef;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
     private int notification_id;
     private RemoteViews remoteViews;
     private Context context;
+    private boolean openNoti=false;
 
 
 
@@ -183,25 +188,6 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
                 submitForm();
 
-                notification_id = (int) System.currentTimeMillis();
-
-                Intent button_intent = new Intent(this,displayBooking.class);
-                button_intent.putExtra("id",notification_id);
-                PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
-                        button_intent,0);
-
-                remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
-
-                Intent notification_intent = new Intent(context,MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
-
-                builder.setSmallIcon(R.mipmap.ic_launcher)
-                        .setAutoCancel(true)
-                        .setCustomBigContentView(remoteViews)
-                        .setContentIntent(pendingIntent);
-
-                notificationManager.notify(notification_id,builder.build());
-
                 break;
 
             case R.id.editTextDate:
@@ -210,6 +196,36 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
                 break;
         }
     }
+
+
+    public void triggerNoti(){
+
+        if (notificationManager.getActiveNotifications().length<=0) {
+            notification_id = (int) System.currentTimeMillis();
+
+            Intent button_intent = new Intent(this,displayBooking.class);
+            button_intent.putExtra("id",notification_id);
+            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
+                    button_intent,0);
+
+            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
+
+            Intent notification_intent = new Intent(context,MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+
+            builder.setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setCustomBigContentView(remoteViews)
+                    .setContentIntent(pendingIntent);
+
+            notificationManager.notify(notification_id,builder.build());
+
+        }
+
+
+
+    }
+
 
     private void datePicker(View view) {
 
@@ -238,6 +254,8 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
     @Override
     protected void onStart() {
+
+
         super.onStart();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -245,6 +263,42 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             Intent i = new Intent(New_Booking.this, MainActivity.class);
             startActivity(i);
         }
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+            myRef = database.getReference().child("AdminNoti");
+            myRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    triggerNoti();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    triggerNoti();
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    triggerNoti();
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+
         userid = currentUser.getUid();
     }
 
@@ -310,6 +364,12 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             startActivity(i);
 
             Toast.makeText(New_Booking.this,"Successfull Book a Service...", Toast.LENGTH_SHORT).show();
+
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("AdminNoti");
+            DatabaseReference noti =mDatabaseRef;
+            noti.child("Noti").setValue(brandDb+" "+modelDb);
+
+
             finish();
 
         }
