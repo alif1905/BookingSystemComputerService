@@ -87,7 +87,7 @@ public class Admin_register extends AppCompatActivity {
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Customer_Main_menu.Auth auth = dataSnapshot.getValue(Customer_Main_menu.Auth.class);
+                Admin_Main_menu.Auth auth = dataSnapshot.getValue(Admin_Main_menu.Auth.class);
                 accesslevel = auth.accessLevel;
                 if (!accesslevel.equals("Admin")) {
                     Intent i = new Intent(Admin_register.this, MainActivity.class);

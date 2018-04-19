@@ -47,12 +47,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     private String accesslevel;
     private int mYear, mMonth, mDay;
     private DatabaseReference myRef;
-    private NotificationCompat.Builder builder;
-    private NotificationManager notificationManager;
-    private int notification_id;
-    private RemoteViews remoteViews;
-    private Context context;
-    private boolean openNoti=false;
+
 
 
 
@@ -65,17 +60,6 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__booking);
-
-        //Notification
-        context = this;
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(this);
-
-        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
-        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
-        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
-        remoteViews.setProgressBar(R.id.progressBar,100,40,true);
-
 
 
         Intent intent = getIntent();
@@ -198,33 +182,6 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     }
 
 
-    public void triggerNoti(){
-
-        if (notificationManager.getActiveNotifications().length<=0) {
-            notification_id = (int) System.currentTimeMillis();
-
-            Intent button_intent = new Intent(this,displayBooking.class);
-            button_intent.putExtra("id",notification_id);
-            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
-                    button_intent,0);
-
-            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
-
-            Intent notification_intent = new Intent(context,MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
-
-            builder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setCustomBigContentView(remoteViews)
-                    .setContentIntent(pendingIntent);
-
-            notificationManager.notify(notification_id,builder.build());
-
-        }
-
-
-
-    }
 
 
     private void datePicker(View view) {
@@ -264,42 +221,12 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             startActivity(i);
         }
 
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        myRef = database.getReference().child("AdminNoti");
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                triggerNoti();
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                triggerNoti();
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                triggerNoti();
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
         assert currentUser != null;
         userid = currentUser.getUid();
-    }
 
+
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -364,8 +291,12 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(New_Booking.this,"Successfull Book a Service...", Toast.LENGTH_SHORT).show();
 
             mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("AdminNoti");
-            DatabaseReference noti =mDatabaseRef;
-            noti.child("Noti").setValue(brandDb+" "+modelDb);
+            DatabaseReference notiAdmin =mDatabaseRef;
+            notiAdmin.child("Admin Noti").child(userid).setValue(brandDb+" "+modelDb);
+
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("CustNoti");
+            DatabaseReference notiCust =mDatabaseRef;
+            notiCust.child("Cust Noti").child(userid).child("Status").setValue("Request Pending");
 
 
             finish();

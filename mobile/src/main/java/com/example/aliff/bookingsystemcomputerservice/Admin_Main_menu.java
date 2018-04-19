@@ -1,14 +1,20 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,10 +33,32 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
     private Button mBookings;
     private Intent intent;
     private Button mMFinancial;
+
+
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private int notification_id;
+    private RemoteViews remoteViews;
+    private Context context;
+    private boolean openNoti=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin__main_menu);
+
+
+      //  Notification
+        context = this;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        builder = new NotificationCompat.Builder(this);
+
+        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
+        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
+        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
+     //   remoteViews.setProgressBar(R.id.progressBar,100,40,true);
+
+
 
         mMFinancial=(Button)findViewById(R.id.btnFinancial);
         mLogoutAdmin =(Button) findViewById(R.id.LogoutAdmin);
@@ -47,6 +75,8 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         mLogoutAdmin.setOnClickListener(this);
         mRecordInventory.setOnClickListener(this);
         mMFinancial.setOnClickListener(this);
+
+
     }
 
 
@@ -101,6 +131,8 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
 
     }
 
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -124,6 +156,38 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
                     startActivity(i);
                     finish();
                 }
+                else{
+                    myRef = database.getReference().child("AdminNoti");
+                    myRef.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            triggerNoti();
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            triggerNoti();
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            triggerNoti();
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+
             }
 
             @Override
@@ -133,7 +197,41 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         });
 
 
+
+
+
     }
+
+
+
+    public void triggerNoti(){
+
+        if (notificationManager.getActiveNotifications().length<=0) {
+            notification_id = (int) System.currentTimeMillis();
+
+            Intent button_intent = new Intent(this,displayBooking.class);
+            button_intent.putExtra("id",notification_id);
+            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
+                    button_intent,0);
+
+//            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
+
+            Intent notification_intent = new Intent(context,MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+
+            builder.setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setCustomBigContentView(remoteViews)
+                    .setContentIntent(pendingIntent);
+
+            notificationManager.notify(notification_id,builder.build());
+
+        }
+
+
+
+    }
+
 
 
     @IgnoreExtraProperties

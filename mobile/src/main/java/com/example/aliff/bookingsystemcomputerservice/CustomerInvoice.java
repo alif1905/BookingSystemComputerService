@@ -24,18 +24,26 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class CustomerInvoice extends AppCompatActivity implements View.OnClickListener {
-    ArrayList<String> values = new ArrayList<String>();
+
     private String accesslevel;
     private String CustId;
-    private String  value;
-    ArrayList<String> rootValues = new ArrayList<String>();
     String userid;
+    private String  value;
+
+
+
+    private ListView lvDate;
+
+    ArrayList<String> values = new ArrayList<String>();
+    ArrayList<String> rootValues = new ArrayList<String>();
     ArrayAdapter<String> adapterDate;
+
+
+
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
    private Button mBackCustInvoice;
 
-   private ListView lvDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,44 +60,43 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
 
 
         lvDate=(ListView)findViewById(R.id.ListViewDate);
+        adapterDate = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_row_layout, R.id.rowTextView, values);
 
         mBackCustInvoice=(Button)findViewById(R.id.btnBckCustinvoice);
-
-
 
         mBackCustInvoice.setOnClickListener(this);
 
 
-        adapterDate = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_row_layout, R.id.rowTextView, values);
 
 
-        lvDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
+//
+//        lvDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//
+//                // ListView Clicked item index
+//                int itemPosition = position;
+//
+//                // ListView Clicked item value
+//                String itemValue = (String) lvDate.getItemAtPosition(position);
+//
+//                // Show Alert
+////                Toast.makeText(getApplicationContext(),
+////                        "Position :" + itemPosition + "  ListItem : " + rootValues.get(itemPosition).toString(), Toast.LENGTH_LONG)
+////                        .show();
+//
+//
+//                Intent i = new Intent(CustomerInvoice.this, CustomerInvoice.class);
+//                i.putExtra("CustID", rootValues.get(itemPosition).toString());
+//                i.putExtra("Value", itemValue);
+//                i.putExtra("ACCESSLEVEL", accesslevel);
+//                startActivity(i);
+//
+//
+//            }
 
-                // ListView Clicked item index
-                int itemPosition = position;
-
-                // ListView Clicked item value
-                String itemValue = (String) lvDate.getItemAtPosition(position);
-
-                // Show Alert
-//                Toast.makeText(getApplicationContext(),
-//                        "Position :" + itemPosition + "  ListItem : " + rootValues.get(itemPosition).toString(), Toast.LENGTH_LONG)
-//                        .show();
-
-
-                Intent i = new Intent(CustomerInvoice.this, CustomerInvoice.class);
-                i.putExtra("CustID", rootValues.get(itemPosition).toString());
-                i.putExtra("Value", itemValue);
-                i.putExtra("ACCESSLEVEL", accesslevel);
-                startActivity(i);
-
-
-            }
-
-        });
+   //     });
 
     }
 
@@ -138,6 +145,9 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         rootValues.clear();
         adapterDate.clear();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+
         myRef = database.getReference().child("Bookings").child(userid).child(value).child("Date");;
 
             Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
@@ -147,11 +157,11 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
                 public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                    displayBooking.Services service = dataSnapshot.getValue(displayBooking.Services.class);
+
                     for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
                         String value = uniqueKeySnapshot.getKey().toString();
                         for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
-                            String whoReject = RootSnapshot.child("Date").child(userid).getKey();
+
                             rootValues.add(value);
                             String rootValue = RootSnapshot.getKey().toString();
                             adapterDate.add(rootValue);

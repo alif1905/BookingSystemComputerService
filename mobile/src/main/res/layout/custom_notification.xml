@@ -16,15 +16,6 @@
         android:layout_marginLeft="7dp"
         android:layout_marginRight="9dp"/>
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_alignBottom="@+id/notif_icon"
-        android:layout_toRightOf="@+id/notif_icon"
-        android:layout_toEndOf="@+id/notif_icon"
-        android:layout_marginLeft="19dp"
-        android:layout_marginStart="19dp" />
 
 
     <TextView
@@ -40,14 +31,14 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enter Booking"
-        android:id="@+id/buttonShowNotification"
-        android:layout_alignBottom="@+id/notif_icon"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Enter Booking"-->
+        <!--android:id="@+id/buttonShowNotification"-->
+        <!--android:layout_alignBottom="@+id/notif_icon"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true" />-->
 
 
 

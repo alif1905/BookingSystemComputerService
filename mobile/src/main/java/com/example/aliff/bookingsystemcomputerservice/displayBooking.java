@@ -1,10 +1,15 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,12 +57,32 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
     private Button btnContact;
     private Menu menu;
     private boolean disable = false;
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    private int notification_id;
+    private RemoteViews remoteViews;
+    private Context context;
+    private boolean openNoti=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_booking);
         Intent intent = getIntent();
+
+
+
+        //Notification
+        context = this;
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        builder = new NotificationCompat.Builder(this);
+
+        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
+        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
+        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
+//        remoteViews.setProgressBar(R.id.progressBar,100,40,true);
+
+
 
         CustId = intent.getStringExtra("CustID");
         value = intent.getStringExtra("Value");
@@ -264,6 +291,33 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         }
 
 
+    public void triggerNoti(){
+
+        if (notificationManager.getActiveNotifications().length<=0) {
+            notification_id = (int) System.currentTimeMillis();
+
+            Intent button_intent = new Intent(this,displayBooking.class);
+            button_intent.putExtra("id",notification_id);
+            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
+                    button_intent,0);
+
+//            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
+
+            Intent notification_intent = new Intent(context,MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+
+            builder.setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setCustomBigContentView(remoteViews)
+                    .setContentIntent(pendingIntent);
+
+            notificationManager.notify(notification_id,builder.build());
+
+        }
+
+
+
+    }
 
 
     public void doneService() {
@@ -754,9 +808,42 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         userid = currentUser.getUid();
 
             getBookings();
-
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
         if(accesslevel.equals("ADMIN")){
             hideButton();
+            if (accesslevel.equals("ADMIN")) {
+
+                myRef = database.getReference().child("AdminNoti");
+                myRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        triggerNoti();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        triggerNoti();
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        triggerNoti();
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+            }
         }
         else{
 
@@ -780,7 +867,11 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             if (accesslevel.equals("USER")) {
                 myRef = database.getReference().child("Bookings").child(userid).child(value);
             } else {
-                myRef = database.getReference().child("Bookings").child(CustId).child(value);
+
+
+                        myRef = database.getReference().child("Bookings").child(CustId).child(value);
+
+
             }
 
             Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
@@ -823,13 +914,14 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         else{
 
 
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
             if (accesslevel.equals("USER")) {
                 myRef = database.getReference().child("Bookings").child(userid).child(value);
             } else {
-                myRef = database.getReference().child("Bookings").child(CustId).child(value);
+
+                        myRef = database.getReference().child("Bookings").child(CustId).child(value);
             }
 
             Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
