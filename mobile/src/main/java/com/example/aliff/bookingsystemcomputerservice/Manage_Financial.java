@@ -19,11 +19,16 @@ public class Manage_Financial extends AppCompatActivity implements View.OnClickL
     private DatabaseReference myRef;
     private FirebaseAuth mAuth;
     private String userid;
+    private String accesslevel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage__financial);
+
+    //    accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
 
         mBackbtn = (Button)findViewById(R.id.btnBackFinancial);
         mCustomerInvoice=(Button)findViewById(R.id.btnCustomerInvoice);
@@ -52,6 +57,7 @@ public class Manage_Financial extends AppCompatActivity implements View.OnClickL
             case R.id.btnCustomerInvoice:
                 intent = new Intent(Manage_Financial.this, CustomerInvoice.class);
 
+             //  intent.putExtra("ACCESSLEVEL", accesslevel);
                 startActivity(intent);
                 finish();
 
@@ -92,7 +98,7 @@ public class Manage_Financial extends AppCompatActivity implements View.OnClickL
             startActivity(i);
         }
 
-        userid = currentUser.getUid();
+//        userid = currentUser.getUid();
 
 
     }

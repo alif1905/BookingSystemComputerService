@@ -90,8 +90,13 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
 
             case R.id.btnFinancial:
                 intent = new Intent(Admin_Main_menu.this, Manage_Financial.class);
+
+                intent.putExtra("ACCESSLEVEL", accesslevel);
+
                 startActivity(intent);
                 finish();
+
+
                 break;
 
             case R.id.btnRecordInventory:

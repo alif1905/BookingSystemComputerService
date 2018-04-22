@@ -257,27 +257,26 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     break;
                 case R.id.btnReturnService:
 
-//                    AlertDialog alertDialog3 = new AlertDialog.Builder(displayBooking.this).create();
-//                    alertDialog3.setTitle("Accept Request");
-//                    alertDialog3.setMessage("Are you sure accept this booking?");
-//                    alertDialog3.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(final DialogInterface dialog, int which) {
-//                                    Intent i = new Intent(displayBooking.this, displayBooking.class);
-//
-////                                    cancelRequest();
-//
-//                                }
-//                            });
-//                    alertDialog3.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//
-//                                    dialog.dismiss();
-//
-//                                }
-//                            });
-//                    alertDialog3.show();
+                    AlertDialog alertDialog3 = new AlertDialog.Builder(displayBooking.this).create();
+                    alertDialog3.setTitle("Return Service");
+                    alertDialog3.setMessage("Are you sure to return service?");
+                    alertDialog3.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    Intent i = new Intent(displayBooking.this, displayBooking.class);
+
+                         returnService();
+                                }
+                            });
+                    alertDialog3.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+
+                                }
+                            });
+                    alertDialog3.show();
 
                     break;
 
@@ -291,6 +290,23 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         }
 
 
+        public void returnService(){
+            Toast.makeText(getApplicationContext(), "Return Service Triggered", Toast.LENGTH_LONG).show();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
+            myRef.setValue("Return Service");
+
+            myRef = database.getReference().child("CustNoti").child(CustId).child(value).child("Status");
+
+            myRef.setValue("Return Service");
+
+            myRef = database.getReference().child("AdminNoti").child(CustId).child(value).child("Status");
+
+            myRef.setValue("Return Service");
+
+
+
+        }
     public void triggerNoti(){
 
         if (notificationManager.getActiveNotifications().length<=0) {
@@ -326,6 +342,21 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
         myRef.setValue("Done Service");
+
+        myRef = database.getReference().child("CustNoti").child(CustId).child(value).child("Status");
+
+        myRef.setValue("Done Service");
+
+        myRef = database.getReference().child("AdminNoti").child(CustId).child(value).child("Status");
+
+        myRef.setValue("Done Service");
+
+
+
+
+
+
+
         getBookings();
         disable = false;
         if (accesslevel.equals("USER")) {
@@ -342,6 +373,16 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Bookings").child(userid).child(value).child("Status");
         myRef.setValue("Booking Updated Cancel by Customer");
+
+        myRef = database.getReference().child("CustNoti").child(userid).child(value).child("Status");
+
+        myRef.setValue("Booking Updated Cancel by Customer");
+
+
+        myRef = database.getReference().child("AdminNoti").child(CustId).child(value).child("Status");
+
+        myRef.setValue("Booking Updated Cancel by Customer");
+
         getBookings();
         disable = false;
         if (accesslevel.equals("USER")) {
@@ -385,6 +426,26 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
                 }
 
+                else if(hide.equals("Return Service")){
+                    btnCancelBooking.setVisibility(View.GONE);
+                    tvRepairType.setVisibility(View.VISIBLE);
+                    tvCharge.setVisibility(View.VISIBLE);
+                    tvCharge.setFocusable(false);
+                    titleRepaired.setVisibility(View.VISIBLE);
+                    titleCharge.setVisibility(View.VISIBLE);
+                    titlereason.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
+                    mBtnAccept.setVisibility(View.GONE);
+                    mBtnReject.setVisibility(View.GONE);
+                    mDoneService.setVisibility(View.GONE);
+                    btnContact.setVisibility(View.GONE);
+                    btnReturnService.setVisibility(View.GONE);
+
+                    disable=true;
+                    getBookings();
+                }
+
+
                 else if(hide.equals("Request Updated")){
                     btnCancelBooking.setVisibility(View.VISIBLE);
                     tvRepairType.setVisibility(View.GONE);
@@ -410,8 +471,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     tvCharge.setFocusable(false);
                     titleRepaired.setVisibility(View.VISIBLE);
                     titleCharge.setVisibility(View.VISIBLE);
-                    titlereason.setVisibility(View.VISIBLE);
-                    tvReason.setVisibility(View.VISIBLE);
+                    titlereason.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
                     mBtnAccept.setVisibility(View.GONE);
                     mBtnReject.setVisibility(View.GONE);
                     mDoneService.setVisibility(View.GONE);
@@ -517,6 +578,24 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     disable=true;
                 }
 
+                else if(hide.equals("Return Service")){
+                    btnCancelBooking.setVisibility(View.GONE);
+                    tvRepairType.setVisibility(View.VISIBLE);
+                    tvCharge.setVisibility(View.VISIBLE);
+                    tvCharge.setFocusable(false);
+                    titleRepaired.setVisibility(View.VISIBLE);
+                    titleCharge.setVisibility(View.VISIBLE);
+                    titlereason.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
+                    mBtnAccept.setVisibility(View.GONE);
+                    mBtnReject.setVisibility(View.GONE);
+                    mDoneService.setVisibility(View.VISIBLE);
+                    btnContact.setVisibility(View.GONE);
+                    btnReturnService.setVisibility(View.GONE);
+
+                    disable=true;
+                    getBookings();
+                }
 
                 else if(hide.equals("Request Updated")){
                     btnCancelBooking.setVisibility(View.GONE);
@@ -543,8 +622,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     tvCharge.setFocusable(false);
                     titleRepaired.setVisibility(View.VISIBLE);
                     titleCharge.setVisibility(View.VISIBLE);
-                    titlereason.setVisibility(View.VISIBLE);
-                    tvReason.setVisibility(View.VISIBLE);
+                    titlereason.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
                     mBtnAccept.setVisibility(View.GONE);
                     mBtnReject.setVisibility(View.GONE);
                     mDoneService.setVisibility(View.GONE);
@@ -580,8 +659,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     tvCharge.setFocusable(false);
                     titleRepaired.setVisibility(View.GONE);
                     titleCharge.setVisibility(View.GONE);
-                    titlereason.setVisibility(View.VISIBLE);
-                    tvReason.setVisibility(View.VISIBLE);
+                    titlereason.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
                     mBtnAccept.setVisibility(View.GONE);
                     mBtnReject.setVisibility(View.GONE);
                     mDoneService.setVisibility(View.GONE);
@@ -635,6 +714,18 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
             myRef.setValue("Request Accepted");
+
+
+
+            myRef = database.getReference().child("CustNoti").child(CustId).child(value).child("Status");
+
+            myRef.setValue("Request Accepted");
+
+
+            myRef = database.getReference().child("AdminNoti").child(CustId).child(value).child("Status");
+
+            myRef.setValue("Request Accepted");
+
             getBookings();
             disable = true;
             if (accesslevel.equals("USER")) {
@@ -650,6 +741,17 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             myRef = database.getReference().child("Bookings").child(userid).child(value).child("Status");
             myRef.setValue("Request Accepted");
+
+            myRef = database.getReference().child("CustNoti").child(userid).child(value).child("Status");
+
+            myRef.setValue("Request Accepted");
+
+
+            myRef = database.getReference().child("AdminNoti").child(userid).child(value).child("Status");
+
+            myRef.setValue("Request Accepted");
+
+
             getBookings();
             disable = true;
             if (accesslevel.equals("USER")) {
@@ -751,6 +853,18 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         myRef = database.getReference().child("Bookings").child(userid).child(value).child("Status");
                         myRef.setValue("Booking Cancel");
+
+
+
+                        myRef = database.getReference().child("CustNoti").child(userid).child(value).child("Status");
+
+                        myRef.setValue("Booking Cancel");
+
+
+                        myRef = database.getReference().child("AdminNoti").child(userid).child(value).child("Status");
+
+                        myRef.setValue("Booking Cancel");
+
                         getBookings();
                         disable = false;
                         if (accesslevel.equals("USER")) {
@@ -806,6 +920,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         }
 
         userid = currentUser.getUid();
+
+        Toast.makeText(getApplication(),CustId,Toast.LENGTH_SHORT).show();
 
             getBookings();
         FirebaseDatabase database = FirebaseDatabase.getInstance();

@@ -142,6 +142,11 @@ public class Customer_Main_menu extends AppCompatActivity {
                     finish();
                 }
                 else {
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+
+                    myRef = database.getReference().child("CustNoti");
 
 
                         myRef.addChildEventListener(new ChildEventListener() {
@@ -150,14 +155,16 @@ public class Customer_Main_menu extends AppCompatActivity {
 
 
 
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-                                myRef = database.getReference().child("CustNoti");
                             }
 
                             @Override
                             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+
+
+                                myRef = database.getReference().child("CustNoti");
 
                                 myRef.addValueEventListener(new ValueEventListener() {
                                     @Override
@@ -172,7 +179,11 @@ public class Customer_Main_menu extends AppCompatActivity {
 
                                         } else if (hide.equals("Request Updated")) {
                                             triggerNoti();
-                                        } else if (hide.equals("Done Service")) {
+                                        }
+                                    else if (hide.equals("Return Service")) {
+                                        triggerNoti();
+                                    }
+                                        else if (hide.equals("Done Service")) {
                                             triggerNoti();
                                         } else if (hide.equals("Request Pending")) {
 

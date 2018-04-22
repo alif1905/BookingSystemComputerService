@@ -17,8 +17,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
@@ -37,10 +40,8 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
     private TextView mEtreason, timeEt;
     private Spinner mReason;
     ArrayAdapter<CharSequence> adapterTime, adapterReason;
-    private String timeDb,dateDb,reasonDb;
+    private String timeDb, dateDb, reasonDb;
     private int mYear, mMonth, mDay;
-
-
 
 
     @Override
@@ -51,7 +52,6 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         Intent intent = getIntent();
 
 
-
         CustId = intent.getStringExtra("CustID");
 
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
@@ -59,16 +59,15 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
 
         userid = intent.getStringExtra("userid");
         value = intent.getStringExtra("value");
-        submit = (Button)findViewById(R.id.btnUpdateRequest);
+        submit = (Button) findViewById(R.id.btnUpdateRequest);
 
 
+        mSpinnerTime = (Spinner) findViewById(R.id.etTime);
+        mEtDate = (EditText) findViewById(R.id.dateEt);
+        mReason = (Spinner) findViewById(R.id.etReason);
 
-        mSpinnerTime=(Spinner)findViewById(R.id.etTime) ;
-        mEtDate=(EditText)findViewById(R.id.dateEt);
-        mReason=(Spinner)findViewById(R.id.etReason) ;
-
-        mEtreason= (TextView) findViewById(R.id.reasonEt);
-        timeEt = (TextView)findViewById(R.id.timeEt);
+        mEtreason = (TextView) findViewById(R.id.reasonEt);
+        timeEt = (TextView) findViewById(R.id.timeEt);
 
         submit.setOnClickListener(this);
 
@@ -118,9 +117,6 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         });
 
 
-
-
-
     }
 
 
@@ -150,14 +146,15 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnUpdateRequest :
+        switch (view.getId()) {
+            case R.id.btnUpdateRequest:
                 updateDetail();
-
+                Intent i = new Intent(UpdateBooking.this, displayBooking.class);
+                i.putExtra("ACCESSLEVEL", accesslevel);
+                i.putExtra("CustID", CustId);
+                i.putExtra("value", value);
                 break;
 
             case R.id.dateEt:
@@ -177,16 +174,13 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
             startActivity(i);
         }
 
-        userid = currentUser.getUid();
-
-
 
 
     }
 
-    public void updateDetail (){
+    public void updateDetail() {
 
-        dateDb=mEtDate.getText().toString();
+        dateDb = mEtDate.getText().toString();
 
         if (timeEt.getText().equals("--")) {
             Toast.makeText(UpdateBooking.this, "Select Time", Toast.LENGTH_SHORT).show();
@@ -201,7 +195,6 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         }
 
 
-
         if (mEtreason.getText().equals("--")) {
             Toast.makeText(UpdateBooking.this, "Select Reason", Toast.LENGTH_SHORT).show();
             return;
@@ -212,23 +205,42 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         if ((!TextUtils.isEmpty(dateDb) && !mEtreason.getText().equals("--") && !timeEt.getText().equals("--"))) {
 
 
-            Toast.makeText(getApplicationContext(), "updateRequest Triggered", Toast.LENGTH_LONG).show();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            myRef = database.getReference().child("Bookings").child(userid).child(value);
-            myRef.child("Date").setValue(dateDb);
-            myRef.child("PickupTime").setValue(timeDb);
-            myRef.child("Reason").setValue(reasonDb);
 
-            myRef.child("Status").setValue("Request Updated");
-            myRef.child("isUpdated").setValue(true);
+
+            if (accesslevel.equals("ADMIN")) {
+                myRef = database.getReference().child("Bookings").child(userid).child(value);
+
+
+                Toast.makeText(getApplicationContext(), "updateRequest Triggered", Toast.LENGTH_LONG).show();
+
+                myRef = database.getReference().child("Bookings").child(userid).child(value);
+                myRef.child("Date").setValue(dateDb);
+                myRef.child("PickupTime").setValue(timeDb);
+                myRef.child("Reason").setValue(reasonDb);
+
+                myRef.child("Status").setValue("Request Updated");
+                myRef.child("isUpdated").setValue(true);
+
+                myRef = database.getReference().child("CustNoti").child(userid).child(value);
+
+                myRef.child("Status").setValue("Request Updated");
+
+                myRef = database.getReference().child("AdminNoti").child(userid).child(value);
+
+                myRef.child("Status").setValue("Request Updated");
+                myRef.child("PickupTime").setValue(timeDb);
+                myRef.child("Reason").setValue(reasonDb);
+                myRef.child("Date").setValue(dateDb);
+            }
+
+
+//
+//         {
+//            timeEt.setError("Required");
+//        }
 
 
         }
-
-
     }
-
-
-
-
 }

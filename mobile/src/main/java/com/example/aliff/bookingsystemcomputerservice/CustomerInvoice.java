@@ -28,8 +28,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     private String accesslevel;
     private String CustId;
     String userid;
-    private String  value;
-
+    private String value;
 
 
     private ListView lvDate;
@@ -39,10 +38,9 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     ArrayAdapter<String> adapterDate;
 
 
-
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-   private Button mBackCustInvoice;
+    private Button mBackCustInvoice;
 
 
     @Override
@@ -50,23 +48,17 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_invoice);
         Intent intent = getIntent();
-        CustId = intent.getStringExtra("CustID");
-        value = intent.getStringExtra("Value");
-        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+//        CustId = intent.getStringExtra("CustID");
+//        value = intent.getStringExtra("Value");
+//        accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
 
-
-        accesslevel = intent.getStringExtra("ACCESSLEVEL");
-
-
-        lvDate=(ListView)findViewById(R.id.ListViewDate);
+        lvDate = (ListView) findViewById(R.id.ListViewDate);
         adapterDate = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_row_layout, R.id.rowTextView, values);
 
-        mBackCustInvoice=(Button)findViewById(R.id.btnBckCustinvoice);
+        mBackCustInvoice = (Button) findViewById(R.id.btnBckCustinvoice);
 
         mBackCustInvoice.setOnClickListener(this);
-
-
 
 
 //
@@ -96,7 +88,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
 //
 //            }
 
-   //     });
+        //     });
 
     }
 
@@ -116,7 +108,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-        @Override
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         Intent i = new Intent(CustomerInvoice.this, Manage_Financial.class);
@@ -135,7 +127,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
             startActivity(i);
         }
 
-        userid = currentUser.getUid();
+
         getInformation();
         lvDate.setAdapter(adapterDate);
     }
@@ -144,45 +136,48 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         values.clear();
         rootValues.clear();
         adapterDate.clear();
+
+        Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //      myRef = database.getReference().child("Bookings").child(userid).child(value);
+
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+//
+//
+//
+//     //               myRef = database.getReference().child("Bookings").child(userid).child(value);
+//
+//
+//
+//                    for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
+//                        myRef=database.getReference().child("Date");
+//                        String value = uniqueKeySnapshot.getKey().toString();
+//                        for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
+//
+//                            rootValues.add(value);
+//                            String rootValue = RootSnapshot.getKey().toString();
+//                            adapterDate.add(rootValue);
+//                        }
+//
+//
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(DatabaseError error) {
+//                    // Failed to read value
+//                    Log.w("bookingsList", "Failed to read value.", error.toException());
+//                }
+//
+//
+//            });
+//        }
 
 
-
-        myRef = database.getReference().child("Bookings").child(userid).child(value).child("Date");;
-
-            Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-
-                    for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
-                        String value = uniqueKeySnapshot.getKey().toString();
-                        for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
-
-                            rootValues.add(value);
-                            String rootValue = RootSnapshot.getKey().toString();
-                            adapterDate.add(rootValue);
-                        }
-
-
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    Log.w("bookingsList", "Failed to read value.", error.toException());
-                }
-
-
-            });
-        }
-
-
-
-
+    }
 }
 
 

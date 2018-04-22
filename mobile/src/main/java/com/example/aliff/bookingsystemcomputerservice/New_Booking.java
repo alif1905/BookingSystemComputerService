@@ -290,13 +290,16 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
             Toast.makeText(New_Booking.this,"Successfull Book a Service...", Toast.LENGTH_SHORT).show();
 
-            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("AdminNoti");
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("AdminNoti").child(userid).child(brandDb+" "+modelDb);
             DatabaseReference notiAdmin =mDatabaseRef;
-            notiAdmin.child("Admin Noti").child(userid).setValue(brandDb+" "+modelDb);
+            notiAdmin.child("Date").setValue(dateDb);
+            notiAdmin.child("PickupTime").setValue(pickupTimeDb);
+            notiAdmin.child("Status").setValue("Request Pending");
+            notiAdmin.child("Reason").setValue(" ");
 
-            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("CustNoti");
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("CustNoti").child(userid).child(brandDb + " " + modelDb);
             DatabaseReference notiCust =mDatabaseRef;
-            notiCust.child("Cust Noti").child(userid).child("Status").setValue("Request Pending");
+            notiCust.child("Status").setValue("Request Pending");
 
 
             finish();
