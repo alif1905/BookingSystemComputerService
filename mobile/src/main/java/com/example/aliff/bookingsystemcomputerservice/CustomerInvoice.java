@@ -29,67 +29,31 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     private String CustId;
     String userid;
     private String value;
-
-
     private ListView lvDate;
-
-    ArrayList<String> values = new ArrayList<String>();
-    ArrayList<String> rootValues = new ArrayList<String>();
     ArrayAdapter<String> adapterDate;
-
-
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
     private Button mBackCustInvoice;
+
+
+
+    private ArrayList<InvoiceMode> dataModels;
+   private ListView listView;
+    private static Invoice adapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_invoice);
-        Intent intent = getIntent();
-//        CustId = intent.getStringExtra("CustID");
-//        value = intent.getStringExtra("Value");
-//        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+
+        listView=(ListView)findViewById(R.id.listView);
+
+        dataModels= new ArrayList<>();
 
 
-        lvDate = (ListView) findViewById(R.id.ListViewDate);
-        adapterDate = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_row_layout, R.id.rowTextView, values);
-
-        mBackCustInvoice = (Button) findViewById(R.id.btnBckCustinvoice);
-
-        mBackCustInvoice.setOnClickListener(this);
-
-
-//
-//        lvDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view,
-//                                    int position, long id) {
-//
-//                // ListView Clicked item index
-//                int itemPosition = position;
-//
-//                // ListView Clicked item value
-//                String itemValue = (String) lvDate.getItemAtPosition(position);
-//
-//                // Show Alert
-////                Toast.makeText(getApplicationContext(),
-////                        "Position :" + itemPosition + "  ListItem : " + rootValues.get(itemPosition).toString(), Toast.LENGTH_LONG)
-////                        .show();
-//
-//
-//                Intent i = new Intent(CustomerInvoice.this, CustomerInvoice.class);
-//                i.putExtra("CustID", rootValues.get(itemPosition).toString());
-//                i.putExtra("Value", itemValue);
-//                i.putExtra("ACCESSLEVEL", accesslevel);
-//                startActivity(i);
-//
-//
-//            }
-
-        //     });
-
+        adapter= new Invoice(dataModels,getApplicationContext());
+        listView.setAdapter(adapter);
     }
 
 
@@ -128,56 +92,103 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         }
 
 
+
+
+
+
         getInformation();
-        lvDate.setAdapter(adapterDate);
     }
 
     private void getInformation() {
-        values.clear();
-        rootValues.clear();
-        adapterDate.clear();
+        dataModels.clear();
 
-        Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //      myRef = database.getReference().child("Bookings").child(userid).child(value);
 
-//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-//
-//
-//
-//     //               myRef = database.getReference().child("Bookings").child(userid).child(value);
-//
-//
-//
-//                    for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
-//                        myRef=database.getReference().child("Date");
-//                        String value = uniqueKeySnapshot.getKey().toString();
-//                        for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
-//
-//                            rootValues.add(value);
-//                            String rootValue = RootSnapshot.getKey().toString();
-//                            adapterDate.add(rootValue);
-//                        }
-//
-//
-//                    }
-//                }
-//                @Override
-//                public void onCancelled(DatabaseError error) {
-//                    // Failed to read value
-//                    Log.w("bookingsList", "Failed to read value.", error.toException());
-//                }
-//
-//
-//            });
-//        }
+        myRef = database.getReference().child("Bookings");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+              for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
 
 
+                    for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
+
+                        InvoiceService invoice =RootSnapshot.getValue(InvoiceService.class);
+
+
+
+
+                        dataModels.add(new InvoiceMode(
+                                invoice.Status,
+                                invoice.Address,
+                                invoice.Model,
+                                invoice.PhoneNo,
+                                invoice.PickupTime,
+                                invoice.Service,
+                                invoice.Brand,
+                                invoice.Date,
+                                invoice.Reason,
+                                true,
+                                true));
+
+
+                    }
+
+
+               }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.w("bookingsList", "Failed to read value.", error.toException());
+            }
+
+
+        });
     }
+
+
+    @IgnoreExtraProperties
+    public static class InvoiceService {
+        public String Date;
+        public String Address;
+        public String Model;
+        public String PhoneNo;
+        public String PickupTime;
+        public String Service;
+        public String Brand;
+        public String Reason;
+        public String Status;
+
+        public boolean isAccepted;
+        public boolean isUpdated;
+
+        public InvoiceService() {
+            // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        }
+
+        public InvoiceService(String status, String address, String model, String phoneNo, String pickupTime, String service, String brand, String date, String reason, boolean isAccepted, boolean isUpdated) {
+
+            this.Status = status;
+            this.Date = date;
+            this.Address = address;
+            this.Model = model;
+            this.PhoneNo = phoneNo;
+            this.PickupTime = pickupTime;
+            this.Service = service;
+            this.Brand = brand;
+            this.Reason = reason;
+            this.isAccepted = isAccepted;
+            this.isUpdated = isUpdated;
+
+        }
+    }
+
+
 }
 
 
