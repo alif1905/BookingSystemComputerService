@@ -38,6 +38,8 @@
         <activity android:name=".FinancialInventoryInvoice" />
         <activity android:name=".UpdateBooking"></activity>
 
+
+
         <receiver android:name=".Button_listener">
             <intent-filter>
                 <action android:name="button_click"/>

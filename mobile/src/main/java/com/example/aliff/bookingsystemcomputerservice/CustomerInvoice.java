@@ -29,8 +29,6 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     private String CustId;
     String userid;
     private String value;
-    private ListView lvDate;
-    ArrayAdapter<String> adapterDate;
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
     private Button mBackCustInvoice;
@@ -38,7 +36,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
 
 
     private ArrayList<InvoiceMode> dataModels;
-   private ListView listView;
+    private ListView listView;
     private static Invoice adapter;
 
 
@@ -48,12 +46,13 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_customer_invoice);
 
         listView=(ListView)findViewById(R.id.listView);
-
+        mBackCustInvoice=(Button)findViewById(R.id.btnBckCustinvoice) ;
         dataModels= new ArrayList<>();
 
 
         adapter= new Invoice(dataModels,getApplicationContext());
         listView.setAdapter(adapter);
+        mBackCustInvoice.setOnClickListener(this);
     }
 
 
@@ -111,7 +110,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-              for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot uniqueKeySnapshot : dataSnapshot.getChildren()) {
 
 
                     for (DataSnapshot RootSnapshot : uniqueKeySnapshot.getChildren()) {
@@ -138,7 +137,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
                     }
 
 
-               }
+                }
             }
 
             @Override
@@ -190,8 +189,3 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
 
 
 }
-
-
-
-
-

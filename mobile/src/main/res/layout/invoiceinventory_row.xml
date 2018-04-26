@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.aliff.bookingsystemcomputerservice.Invoice">
+    tools:context="com.example.aliff.bookingsystemcomputerservice.InvoiceInventory">
 
 
     <LinearLayout
@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tvDate"
+            android:id="@+id/tvItemDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,7 +30,7 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/tvItemName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,7 +43,7 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tvItem"
+            android:id="@+id/tvItemBrand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -56,7 +56,7 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tvService"
+            android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -69,12 +69,25 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/tvRm"
+            android:id="@+id/tvItemQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TextView"
             tools:textColor="@android:color/background_dark" />
+
+        <TextView
+            android:id="@+id/tvItemAvailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView"
+            tools:textColor="@android:color/background_dark" />
+
+        <Space
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </RelativeLayout>

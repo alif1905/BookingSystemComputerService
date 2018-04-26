@@ -13,11 +13,11 @@ import java.util.ArrayList;
 
 public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickListener{
 
-    private ArrayList<InvoiceMode> dataSet;
+    public ArrayList<InvoiceMode> dataSet;
     Context mContext;
 
     // View lookup cache
-    private static class ViewHolder {
+    public static class ViewHolder {
         TextView tvName;
         TextView tvDate;
         TextView tvItem;
@@ -49,7 +49,7 @@ public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickLi
 //        }
     }
 
-    private int lastPosition = -1;
+   public int lastPosition = -1;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -72,12 +72,9 @@ public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickLi
             viewHolder.tvRm = (TextView) convertView.findViewById(R.id.tvRm);
 
 
-            result=convertView;
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            result=convertView;
         }
         lastPosition = position;
 

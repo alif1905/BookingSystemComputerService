@@ -21,15 +21,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorPrimary" />
     </HorizontalScrollView>
 
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="400dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="400dp">
         <Button
             android:id="@+id/btnAccept"
 
@@ -42,17 +42,17 @@
 
             android:text="Print" />
 
-            <Button
-                android:id="@+id/btnBckCustinvoice"
+        <Button
+            android:id="@+id/btnBckCustinvoice"
 
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
 
 
-                android:layout_weight="1"
+            android:layout_weight="1"
 
-                android:text="Back" />
-        </LinearLayout>
+            android:text="Back" />
+    </LinearLayout>
 
 </RelativeLayout>
