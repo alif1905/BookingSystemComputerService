@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,25 +37,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class displayBooking extends AppCompatActivity implements View.OnClickListener {
 
     private String accesslevel;
-    private String CustId;
+    private String CustId,name,add,brand,model,phone,service,charge,repaired,reason,date;
     private String userid, value;
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-    private TextView tvStatus,tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService, tvDate,tvReason,tvCharge,tvRepairType;
+    private TextView tvStatus,tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService, tvDate,tvReason;
+    private EditText tvCharge;
+    private EditText tvRepairType;
     private TextView titlereason,titleRepaired,titleCharge;
 
     private ProgressDialog progressDialog;
     private Button mBtnReject;
+    private Button mBtnDoneCollect;
     private Button mBtnAccept;
     private Button mDoneService;
     private Button btnCancelBooking;
     private Button btnReturnService;
     private Button btnContact;
+    private Button btnDiagnose;
+    private Button btnSubmitDiagnose;
     private Menu menu;
     private boolean disable = false;
     private NotificationCompat.Builder builder;
@@ -62,8 +69,10 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
     private int notification_id;
     private RemoteViews remoteViews;
     private Context context;
-    private boolean openNoti=false;
 
+    private boolean openNoti=false;
+    private String chargeRMDb;
+    private String repairingDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,14 +82,26 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
         //Notification
-        context = this;
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(this);
-
-        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
-        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
-        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
+//        context = this;
+//        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        builder = new NotificationCompat.Builder(this);
+//
+//        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
+//        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
+//        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
 //        remoteViews.setProgressBar(R.id.progressBar,100,40,true);
+
+
+        name = intent.getStringExtra("name");
+        add = intent.getStringExtra("address");
+        charge = intent.getStringExtra("charge");
+        brand = intent.getStringExtra("brand");
+        model = intent.getStringExtra("model");
+        phone = intent.getStringExtra("phone");
+        service = intent.getStringExtra("service");
+        reason = intent.getStringExtra("reason");
+        repaired = intent.getStringExtra("repairedtype");
+        date = intent.getStringExtra("date");
 
 
 
@@ -88,12 +109,16 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         value = intent.getStringExtra("Value");
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
+        mBtnDoneCollect=(Button) findViewById(R.id.btnDoneCollectItem);
         btnReturnService = (Button) findViewById(R.id.btnReturnService);
         btnContact = (Button) findViewById(R.id.btnContact);
         mDoneService = (Button) findViewById(R.id.btnDoneService);
         mBtnAccept = (Button) findViewById(R.id.btnAccept);
         mBtnReject = (Button) findViewById(R.id.btnReject);
+        btnDiagnose = (Button) findViewById(R.id.btnDiagnose);
         btnCancelBooking = (Button) findViewById(R.id.btnCancelBooking);
+        btnSubmitDiagnose= (Button) findViewById(R.id.btnSubmitDiagnoseRequest);
+
         tvDate = (TextView) findViewById(R.id.tvDate);
 
 
@@ -103,7 +128,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
         tvCharge = (EditText) findViewById(R.id.tvCostCharge);
-        tvRepairType = (TextView) findViewById(R.id.tvRepairedType);
+        tvRepairType = (EditText) findViewById(R.id.tvRepairedType);
         tvStatus = (TextView) findViewById(R.id.tvStatusService);
         tvAdd = (TextView) findViewById(R.id.tvAddress);
         tvBrand = (TextView) findViewById(R.id.tvBrand);
@@ -121,9 +146,9 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         btnReturnService.setOnClickListener(this);
         btnContact.setOnClickListener(this);
         mDoneService.setOnClickListener(this);
-
-
-
+        mBtnDoneCollect.setOnClickListener(this);
+        btnDiagnose.setOnClickListener(this);
+        btnSubmitDiagnose.setOnClickListener(this);
 
         if (accesslevel.equals("USER")) {
             mBtnAccept.setVisibility(View.GONE);
@@ -139,6 +164,9 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             btnContact.setVisibility(View.GONE);
             btnReturnService.setVisibility(View.GONE);
             mDoneService.setVisibility(View.GONE);
+            mBtnDoneCollect.setVisibility(View.GONE);
+            btnDiagnose.setVisibility(View.GONE);
+            btnSubmitDiagnose.setVisibility(View.GONE);
 
         } else {
 
@@ -156,6 +184,9 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             btnContact.setVisibility(View.GONE);
             btnReturnService.setVisibility(View.GONE);
             mDoneService.setVisibility(View.GONE);
+            mBtnDoneCollect.setVisibility(View.GONE);
+            btnDiagnose.setVisibility(View.GONE);
+            btnSubmitDiagnose.setVisibility(View.GONE);
 
         }
     }
@@ -165,8 +196,88 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
             switch (view.getId()) {
+                case R.id.btnSubmitDiagnoseRequest:
+                    AlertDialog alertDialog8 = new AlertDialog.Builder(displayBooking.this).create();
+                    alertDialog8.setTitle("Done Collect Item");
+                    alertDialog8.setMessage("Are you done collect item this booking?");
+                    alertDialog8.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    Intent i = new Intent(displayBooking.this, displayBooking.class);
+
+                                    //   doneCollect();
+
+                                }
+                            });
+                    alertDialog8.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+
+                                }
+                            });
+                    alertDialog8.show();
+
+                    break;
 
 
+                case R.id.btnDiagnose:
+//                    AlertDialog alertDialog7 = new AlertDialog.Builder(displayBooking.this).create();
+//                    alertDialog7.setTitle("Diagnose Request");
+//                    alertDialog7.setMessage("Are sure to Submit this Confirmation service to Customer?");
+//                    alertDialog7.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(final DialogInterface dialog, int which) {
+                    Intent j = new Intent(displayBooking.this, diagnoseAdapter.class);
+                    j.putExtra("ACCESSLEVEL", accesslevel);
+                    j.putExtra("userid", CustId);
+                    j.putExtra("value", value);
+
+
+                    startActivity(j);
+
+                    finish();
+                                 //   doneCollect();
+//
+//                                }
+//                            });
+//                    alertDialog7.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//
+//                                    dialog.dismiss();
+//
+//                                }
+//                            });
+             //       alertDialog7.show();
+
+                    break;
+
+                case R.id.btnDoneCollectItem:
+                    AlertDialog alertDialog5 = new AlertDialog.Builder(displayBooking.this).create();
+                    alertDialog5.setTitle("Done Collect Item");
+                    alertDialog5.setMessage("Are you done collect item this booking?");
+                    alertDialog5.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    Intent i = new Intent(displayBooking.this, displayBooking.class);
+
+                                    doneCollect();
+
+                                }
+                            });
+                    alertDialog5.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+
+                                }
+                            });
+                    alertDialog5.show();
+
+                    break;
                 case R.id.btnCancelBooking:
 
                     AlertDialog alertDialog2 = new AlertDialog.Builder(displayBooking.this).create();
@@ -282,6 +393,37 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
                 case R.id.btnContact:
 
+                    AlertDialog alertDialog6 = new AlertDialog.Builder(displayBooking.this).create();
+                    alertDialog6.setTitle("Contact Customer");
+                    alertDialog6.setMessage("Are you sure to Contact Customer?");
+                    alertDialog6.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(final DialogInterface dialog, int which) {
+
+
+
+                                    String toNumber = tvPhone.getText().toString(); // contains spaces.
+                                    toNumber = toNumber.replace("+", "").replace(" ", "");
+
+                                    Intent sendIntent = new Intent("android.intent.action.MAIN");
+                                    sendIntent.putExtra("jid", toNumber + "@s.whatsapp.net");
+
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.setPackage("com.whatsapp");
+                                    sendIntent.setType("text/plain");
+                                    startActivity(sendIntent);
+
+                                }
+                            });
+                    alertDialog6.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    dialog.dismiss();
+
+                                }
+                            });
+                    alertDialog6.show();
 
 
                     break;
@@ -307,39 +449,80 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
         }
-    public void triggerNoti(){
 
-        if (notificationManager.getActiveNotifications().length<=0) {
-            notification_id = (int) System.currentTimeMillis();
+        /**
+         * NOTE:
+         * Message is shared with only one user at a time. and to navigate back to main application user need to click back button
+         */
 
-            Intent button_intent = new Intent(this,displayBooking.class);
-            button_intent.putExtra("id",notification_id);
-            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
-                    button_intent,0);
 
-//            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
 
-            Intent notification_intent = new Intent(context,MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+//    public void triggerNoti(){
+//
+//        if (notificationManager.getActiveNotifications().length<=0) {
+//            notification_id = (int) System.currentTimeMillis();
+//
+//            Intent button_intent = new Intent(this,displayBooking.class);
+//            button_intent.putExtra("id",notification_id);
+//            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
+//                    button_intent,0);
+//
+////            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
+//
+//            Intent notification_intent = new Intent(context,MainActivity.class);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+//
+//            builder.setSmallIcon(R.mipmap.ic_launcher)
+//                    .setAutoCancel(true)
+//                    .setCustomBigContentView(remoteViews)
+//                    .setContentIntent(pendingIntent);
+//
+//            notificationManager.notify(notification_id,builder.build());
+//
+//        }
+//
+//
+//
+//    }
 
-            builder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setCustomBigContentView(remoteViews)
-                    .setContentIntent(pendingIntent);
 
-            notificationManager.notify(notification_id,builder.build());
+    public void doneService() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+
+        repairingDb=tvRepairType .getText().toString();
+        if (TextUtils.isEmpty(repairingDb)) {
+            Toast.makeText(displayBooking.this, "Please State Repairing!", Toast.LENGTH_SHORT).show();
+            return;
         }
 
 
 
-    }
 
 
-    public void doneService() {
+        myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Repairing");
+
+        myRef.setValue(repairingDb);
+
+
+
+
+        chargeRMDb=tvCharge .getText().toString();
+        if (TextUtils.isEmpty(chargeRMDb)) {
+            Toast.makeText(displayBooking.this, "Please State Charge Service!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+
+
+
+        myRef = database.getReference().child("Bookings").child(CustId).child(value).child("ChargeRM");
+
+        myRef.setValue(chargeRMDb);
+
 
         Toast.makeText(getApplicationContext(), "Done Service Triggered", Toast.LENGTH_LONG).show();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
         myRef.setValue("Done Service");
 
@@ -408,7 +591,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     btnCancelBooking.setVisibility(View.GONE);
                     tvRepairType.setVisibility(View.VISIBLE);
                     tvCharge.setVisibility(View.VISIBLE);
-                    tvCharge.setFocusable(false);
+
                     titleRepaired.setVisibility(View.VISIBLE);
                     titleCharge.setVisibility(View.VISIBLE);
                     titlereason.setVisibility(View.GONE);
@@ -424,6 +607,25 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     getBookings();
 
 
+                }
+
+
+                else  if (hide.equals("Staff Diagnosing Your PC")) {
+                    tvRepairType.setVisibility(View.GONE);
+                    tvCharge.setVisibility(View.GONE);
+                    btnCancelBooking.setVisibility(View.GONE);
+                    titleRepaired.setVisibility(View.GONE);
+                    titleCharge.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
+                    mBtnAccept.setVisibility(View.GONE);
+                    mBtnReject.setVisibility(View.GONE);
+                    mDoneService.setVisibility(View.GONE);
+                    btnContact.setVisibility(View.GONE);
+                    btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
+                    btnDiagnose.setVisibility(View.GONE);
+                    btnSubmitDiagnose.setVisibility(View.GONE);
+                    disable=true;
                 }
 
                 else if(hide.equals("Return Service")){
@@ -468,7 +670,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     btnCancelBooking.setVisibility(View.GONE);
                     tvRepairType.setVisibility(View.VISIBLE);
                     tvCharge.setVisibility(View.VISIBLE);
-                    tvCharge.setFocusable(false);
+
                     titleRepaired.setVisibility(View.VISIBLE);
                     titleCharge.setVisibility(View.VISIBLE);
                     titlereason.setVisibility(View.GONE);
@@ -564,6 +766,40 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
                 if (hide.equals("Request Accepted")) {
+                    tvRepairType.setVisibility(View.GONE);
+                    tvCharge.setVisibility(View.GONE);
+                    btnCancelBooking.setVisibility(View.GONE);
+                    titleRepaired.setVisibility(View.GONE);
+                    titleCharge.setVisibility(View.GONE);
+                    tvReason.setVisibility(View.GONE);
+                    mBtnAccept.setVisibility(View.GONE);
+                    mBtnReject.setVisibility(View.GONE);
+                    mDoneService.setVisibility(View.GONE);
+                    btnContact.setVisibility(View.VISIBLE);
+                    btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.VISIBLE);
+                    disable=true;
+                }
+
+                else  if (hide.equals("Staff Diagnosing Your PC")) {
+                    tvRepairType.setVisibility(View.VISIBLE);
+                    tvCharge.setVisibility(View.VISIBLE);
+                    btnCancelBooking.setVisibility(View.GONE);
+                    titleRepaired.setVisibility(View.VISIBLE);
+                    titleCharge.setVisibility(View.VISIBLE);
+                    tvReason.setVisibility(View.GONE);
+                    mBtnAccept.setVisibility(View.GONE);
+                    mBtnReject.setVisibility(View.GONE);
+                    mDoneService.setVisibility(View.GONE);
+                    btnContact.setVisibility(View.GONE);
+                    btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
+                    btnDiagnose.setVisibility(View.VISIBLE);
+                    btnSubmitDiagnose.setVisibility(View.VISIBLE);
+                    disable=true;
+                }
+
+              else  if (hide.equals("Service In Progress")) {
                     tvRepairType.setVisibility(View.VISIBLE);
                     tvCharge.setVisibility(View.VISIBLE);
                     btnCancelBooking.setVisibility(View.GONE);
@@ -575,14 +811,16 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.VISIBLE);
                     btnContact.setVisibility(View.GONE);
                     btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=true;
                 }
 
                 else if(hide.equals("Return Service")){
                     btnCancelBooking.setVisibility(View.GONE);
                     tvRepairType.setVisibility(View.VISIBLE);
+
                     tvCharge.setVisibility(View.VISIBLE);
-                    tvCharge.setFocusable(false);
+
                     titleRepaired.setVisibility(View.VISIBLE);
                     titleCharge.setVisibility(View.VISIBLE);
                     titlereason.setVisibility(View.GONE);
@@ -592,7 +830,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.VISIBLE);
                     btnContact.setVisibility(View.GONE);
                     btnReturnService.setVisibility(View.GONE);
-
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=true;
                     getBookings();
                 }
@@ -611,6 +849,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.GONE);
                     btnContact.setVisibility(View.GONE);
                     btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=false;
                     getBookings();
                 }
@@ -618,6 +857,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                 else if(hide.equals("Done Service")){
                     btnCancelBooking.setVisibility(View.GONE);
                     tvRepairType.setVisibility(View.VISIBLE);
+                    tvRepairType.setFocusable(false);
                     tvCharge.setVisibility(View.VISIBLE);
                     tvCharge.setFocusable(false);
                     titleRepaired.setVisibility(View.VISIBLE);
@@ -629,7 +869,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.GONE);
                     btnContact.setVisibility(View.VISIBLE);
                     btnReturnService.setVisibility(View.VISIBLE);
-
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=true;
                     getBookings();
                 }
@@ -648,6 +888,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.GONE);
                     btnContact.setVisibility(View.GONE);
                     btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=false;
                     getBookings();
                 }
@@ -666,6 +907,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.GONE);
                     btnContact.setVisibility(View.GONE);
                     btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=true;
                     getBookings();
                 }
@@ -684,6 +926,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                     mDoneService.setVisibility(View.GONE);
                     btnContact.setVisibility(View.GONE);
                     btnReturnService.setVisibility(View.GONE);
+                    mBtnDoneCollect.setVisibility(View.GONE);
                     disable=true;
                     getBookings();
 
@@ -705,13 +948,75 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
 
+public void doneCollect(){
+    if(accesslevel.equals("ADMIN")) {
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+
+
+        Toast.makeText(getApplicationContext(), "Done Collect Item Triggered", Toast.LENGTH_LONG).show();
+
+        myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
+        myRef.setValue("Staff Diagnosing Your PC");
+
+
+
+        myRef = database.getReference().child("CustNoti").child(CustId).child(value).child("Status");
+
+        myRef.setValue("Staff Diagnosing Your PC");
+
+
+        myRef = database.getReference().child("AdminNoti").child(CustId).child(value).child("Status");
+
+        myRef.setValue("Staff Diagnosing Your PC");
+
+        getBookings();
+        disable = true;
+        if (accesslevel.equals("USER")) {
+            myRef = database.getReference().child("Bookings").child(userid).child(value);
+        } else {
+            myRef = database.getReference().child("Bookings").child(CustId).child(value);
+        }
+
+    }
+
+    else if(accesslevel.equals("USER")){
+        Toast.makeText(getApplicationContext(), "acceptRequest Triggered", Toast.LENGTH_LONG).show();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child("Bookings").child(userid).child(value).child("Status");
+        myRef.setValue("Staff Diagnosing Your PC");
+
+        myRef = database.getReference().child("CustNoti").child(userid).child(value).child("Status");
+
+        myRef.setValue("Staff Diagnosing Your PC");
+
+
+        myRef = database.getReference().child("AdminNoti").child(userid).child(value).child("Status");
+
+        myRef.setValue("Staff Diagnosing Your PC");
+
+
+        getBookings();
+        disable = true;
+        if (accesslevel.equals("USER")) {
+            myRef = database.getReference().child("Bookings").child(userid).child(value);
+        } else {
+            myRef = database.getReference().child("Bookings").child(CustId).child(value);
+        }
+    }
+}
 
     public void acceptRequest() {
 
         if(accesslevel.equals("ADMIN")) {
-            Toast.makeText(getApplicationContext(), "acceptRequest Triggered", Toast.LENGTH_LONG).show();
+
             FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+            Toast.makeText(getApplicationContext(), "acceptRequest Triggered", Toast.LENGTH_LONG).show();
+
             myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
             myRef.setValue("Request Accepted");
 
@@ -921,45 +1226,44 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
         userid = currentUser.getUid();
 
-        Toast.makeText(getApplication(),CustId,Toast.LENGTH_SHORT).show();
 
             getBookings();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         if(accesslevel.equals("ADMIN")){
             hideButton();
-            if (accesslevel.equals("ADMIN")) {
-
-                myRef = database.getReference().child("AdminNoti");
-                myRef.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        triggerNoti();
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        triggerNoti();
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        triggerNoti();
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-
-
-            }
+//            if (accesslevel.equals("ADMIN")) {
+//
+//                myRef = database.getReference().child("AdminNoti");
+//                myRef.addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                        triggerNoti();
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                        triggerNoti();
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                        triggerNoti();
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//
+//
+//
+//            }
         }
         else{
 
@@ -996,6 +1300,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Services service = dataSnapshot.getValue(Services.class);
+                    tvRepairType.setText(service.Repairing);
+                    tvCharge.setText(service.ChargeRM);
                     tvDate.setText(service.Date);
                     tvAdd.setText(service.Address);
                     tvBrand.setText(service.Brand);
@@ -1046,6 +1352,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Services service = dataSnapshot.getValue(Services.class);
+                    tvRepairType.setText(service.Repairing);
+                    tvCharge.setText(service.ChargeRM);
                     tvDate.setText(service.Date);
                     tvAdd.setText(service.Address);
                     tvBrand.setText(service.Brand);
@@ -1080,6 +1388,9 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
     @IgnoreExtraProperties
     public static class Services {
+        public  String Repairing;
+
+        public  String ChargeRM;
         public String Date;
         public String Address;
         public String Model;
@@ -1097,8 +1408,9 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
             // Default constructor required for calls to DataSnapshot.getValue(User.class)
         }
 
-        public Services(String status,String address, String model, String phoneNo, String pickupTime, String service, String brand, String date, String reason, boolean isAccepted, boolean isUpdated) {
-
+        public Services(String repairing,String chargeRM,String status,String address, String model, String phoneNo, String pickupTime, String service, String brand, String date, String reason, boolean isAccepted, boolean isUpdated) {
+            this.Repairing=repairing;
+            this.ChargeRM=chargeRM;
             this.Status = status;
             this.Date = date;
             this.Address = address;

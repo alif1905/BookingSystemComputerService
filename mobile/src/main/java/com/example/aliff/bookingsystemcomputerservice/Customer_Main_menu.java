@@ -44,13 +44,13 @@ public class Customer_Main_menu extends AppCompatActivity {
 
 
         //Notification
-        context = this;
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(this);
-
-        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
-        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
-        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
+//        context = this;
+//        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        builder = new NotificationCompat.Builder(this);
+//
+//        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
+//        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
+//        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
 //        remoteViews.setProgressBar(R.id.progressBar,100,40,true);
 
         Intent intent = getIntent();
@@ -141,126 +141,17 @@ public class Customer_Main_menu extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 }
-                else {
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-
-                    myRef = database.getReference().child("CustNoti");
-
-
-                        myRef.addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-
-
-
-                            }
-
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
-
-                                myRef = database.getReference().child("CustNoti");
-
-                                myRef.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        String hide = dataSnapshot.getValue(String.class);
-
-
-                                        if (hide.equals("Request Accepted")) {
-
-                                            triggerNoti();
-
-
-                                        } else if (hide.equals("Request Updated")) {
-                                            triggerNoti();
-                                        }
-                                    else if (hide.equals("Return Service")) {
-                                        triggerNoti();
-                                    }
-                                        else if (hide.equals("Done Service")) {
-                                            triggerNoti();
-                                        } else if (hide.equals("Request Pending")) {
-
-                                        } else if (hide.equals("Booking Updated Cancel by Customer")) {
-                                            triggerNoti();
-                                        } else {
-                                            triggerNoti();
-
-                                        }
-
-
-                                        Toast.makeText(getApplication(), hide, Toast.LENGTH_LONG).show();
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-                    }
-                }
-
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
-
-
-    }
-
-
-
-    public void triggerNoti(){
-
-        if (notificationManager.getActiveNotifications().length<=0) {
-            notification_id = (int) System.currentTimeMillis();
-
-            Intent button_intent = new Intent(this,displayBooking.class);
-            button_intent.putExtra("id",notification_id);
-            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
-                    button_intent,0);
-
-//            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
-
-            Intent notification_intent = new Intent(context,MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
-
-            builder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setCustomBigContentView(remoteViews)
-                    .setContentIntent(pendingIntent);
-
-            notificationManager.notify(notification_id,builder.build());
-
-        }
 
 
 

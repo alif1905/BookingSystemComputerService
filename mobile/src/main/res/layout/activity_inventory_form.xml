@@ -130,7 +130,7 @@
             android:layout_marginTop="5dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Quantity All Stock"
+            android:text="Quantity In Stock"
             android:textSize="20sp"
 
             />
@@ -161,15 +161,15 @@
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/TVQuantityRemaining"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Quantity Available Stock"
-            android:textSize="20sp"
+        <!--<TextView-->
+            <!--android:id="@+id/TVQuantityRemaining"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:ems="10"-->
+            <!--android:inputType="textPersonName"-->
+            <!--android:text="Quantity Available Stock"-->
+            <!--android:textSize="20sp"-->
 
             />
 
@@ -178,23 +178,23 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/quantityRemainingEt"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName" />
+            <!--<TextView-->
+                <!--android:id="@+id/quantityRemainingEt"-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:ems="10"-->
+                <!--android:inputType="textPersonName" />-->
 
-            <Spinner
-                android:id="@+id/etQuantityRemaining"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
+            <!--<Spinner-->
+                <!--android:id="@+id/etQuantityRemaining"-->
+                <!--android:layout_width="1dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:layout_weight="1"-->
 
-                android:ems="10"
-                android:inputType="textPersonName" />
+                <!--android:ems="10"-->
+                <!--android:inputType="textPersonName" />-->
         </LinearLayout>
 
         <Button

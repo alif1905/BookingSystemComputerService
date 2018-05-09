@@ -33,6 +33,7 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
     private Button mBookings;
     private Intent intent;
     private Button mMFinancial;
+    private Button mTesting;
 
 
     private NotificationCompat.Builder builder;
@@ -49,13 +50,13 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
 
 
       //  Notification
-        context = this;
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        builder = new NotificationCompat.Builder(this);
-
-        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
-        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
-        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
+//        context = this;
+//        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        builder = new NotificationCompat.Builder(this);
+//
+//        remoteViews = new RemoteViews(getPackageName(),R.layout.custom_notification);
+//        remoteViews.setImageViewResource(R.id.notif_icon,R.drawable.fastplay2);
+//        remoteViews.setTextViewText(R.id.notif_title,"You have receive Notification");
      //   remoteViews.setProgressBar(R.id.progressBar,100,40,true);
 
 
@@ -67,7 +68,7 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         mBookings = (Button) findViewById(R.id.btnBookings);
         mRecordInventory = (Button) findViewById(R.id.btnRecordInventory);
 
-
+        mTesting = (Button) findViewById(R.id.Testing);
 
         mBookings.setOnClickListener(this);
         mRegisterAdmin.setOnClickListener(this);
@@ -76,7 +77,7 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         mRecordInventory.setOnClickListener(this);
         mMFinancial.setOnClickListener(this);
 
-
+        mTesting.setOnClickListener(this);
     }
 
 
@@ -86,7 +87,16 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         Intent intent;
 
         switch (view.getId()) {
+            case R.id.Testing:
+                intent = new Intent(Admin_Main_menu.this, ViewInvoicePDF.class);
 
+                intent.putExtra("ACCESSLEVEL", accesslevel);
+
+                startActivity(intent);
+                finish();
+
+
+                break;
 
             case R.id.btnFinancial:
                 intent = new Intent(Admin_Main_menu.this, Manage_Financial.class);
@@ -162,33 +172,33 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
                     finish();
                 }
                 else{
-                    myRef = database.getReference().child("AdminNoti");
-                    myRef.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            triggerNoti();
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            triggerNoti();
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-                            triggerNoti();
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+//                    myRef = database.getReference().child("AdminNoti");
+//                    myRef.addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                            triggerNoti();
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                            triggerNoti();
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                            triggerNoti();
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    });
 
 
                 }
@@ -209,33 +219,33 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
 
 
 
-    public void triggerNoti(){
-
-        if (notificationManager.getActiveNotifications().length<=0) {
-            notification_id = (int) System.currentTimeMillis();
-
-            Intent button_intent = new Intent(this,displayBooking.class);
-            button_intent.putExtra("id",notification_id);
-            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
-                    button_intent,0);
-
-//            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
-
-            Intent notification_intent = new Intent(context,MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
-
-            builder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setCustomBigContentView(remoteViews)
-                    .setContentIntent(pendingIntent);
-
-            notificationManager.notify(notification_id,builder.build());
-
-        }
-
-
-
-    }
+//    public void triggerNoti(){
+//
+//        if (notificationManager.getActiveNotifications().length<=0) {
+//            notification_id = (int) System.currentTimeMillis();
+//
+//            Intent button_intent = new Intent(this,displayBooking.class);
+//            button_intent.putExtra("id",notification_id);
+//            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
+//                    button_intent,0);
+//
+////            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
+//
+//            Intent notification_intent = new Intent(context,MainActivity.class);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
+//
+//            builder.setSmallIcon(R.mipmap.ic_launcher)
+//                    .setAutoCancel(true)
+//                    .setCustomBigContentView(remoteViews)
+//                    .setContentIntent(pendingIntent);
+//
+//            notificationManager.notify(notification_id,builder.build());
+//
+//        }
+//
+//
+//
+//    }
 
 
 

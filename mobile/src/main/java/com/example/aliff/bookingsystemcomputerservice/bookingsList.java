@@ -41,7 +41,7 @@ public class bookingsList extends AppCompatActivity {
         Intent intent = getIntent();
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
-        listView = (ListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listViewCustInvoiceBookingList);
         adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.simple_row_layout, R.id.rowTextView, values);
 
 
@@ -62,11 +62,11 @@ public class bookingsList extends AppCompatActivity {
 //                        .show();
 
 
-                    Intent i = new Intent(bookingsList.this, displayBooking.class);
-                    i.putExtra("CustID", rootValues.get(itemPosition));
-                    i.putExtra("Value", itemValue);
-                    i.putExtra("ACCESSLEVEL", accesslevel);
-                    startActivity(i);
+                Intent i = new Intent(bookingsList.this, displayBooking.class);
+                i.putExtra("CustID", rootValues.get(itemPosition));
+                i.putExtra("Value", itemValue);
+                i.putExtra("ACCESSLEVEL", accesslevel);
+                startActivity(i);
 
 
             }

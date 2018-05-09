@@ -10,6 +10,17 @@
     android:orientation="vertical"
     tools:context="com.example.aliff.bookingsystemcomputerservice.Admin_Main_menu"
     >
+
+    <Button
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:text="Testing"
+        android:textSize="15dp"
+        android:id="@+id/Testing"/>
+
+
     <Button
         android:layout_width="85dp"
         android:layout_height="wrap_content"
@@ -60,7 +71,7 @@
         android:textSize="15dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text=" Manage Financial"/>
+        android:text=" Invoice "/>
 
     <Button
         android:layout_marginTop="10dp"

@@ -12,7 +12,8 @@ import com.google.firebase.database.DatabaseReference;
 
 public class Manage_Financial extends AppCompatActivity implements View.OnClickListener {
 
-    private Button mBackbtn,mCustomerInvoice,mBtnInventoriInvoice;
+    private Button mBackbtn,mCustomerInvoice;
+//    private Button mBtnInventoriInvoice;
     private Intent intent;
 
 
@@ -32,10 +33,10 @@ public class Manage_Financial extends AppCompatActivity implements View.OnClickL
 
         mBackbtn = (Button)findViewById(R.id.btnBackFinancial);
         mCustomerInvoice=(Button)findViewById(R.id.btnCustomerInvoice);
-        mBtnInventoriInvoice=(Button) findViewById(R.id.btnInventoryInvoice);
+//        mBtnInventoriInvoice=(Button) findViewById(R.id.btnInventoryInvoice);
 
 
-        mBtnInventoriInvoice.setOnClickListener(this);
+//        mBtnInventoriInvoice.setOnClickListener(this);
         mBackbtn.setOnClickListener(this);
         mCustomerInvoice.setOnClickListener(this);
     }
@@ -64,14 +65,14 @@ public class Manage_Financial extends AppCompatActivity implements View.OnClickL
                 break;
 
 
-
-                case R.id.btnInventoryInvoice:
-                    intent = new Intent(Manage_Financial.this, FinancialInventoryInvoice.class);
-
-                    startActivity(intent);
-                    finish();
-
-                    break;
+//
+//                case R.id.btnInventoryInvoice:
+//                    intent = new Intent(Manage_Financial.this, FinancialInventoryInvoice.class);
+//
+//                    startActivity(intent);
+//                    finish();
+//
+//                    break;
         }
     }
 

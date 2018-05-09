@@ -12,6 +12,48 @@ public class InvoiceMode {
     public String Brand;
     public String Reason;
     public String Status;
+    public String Name;
+    public String custId;
+
+
+
+    public String getCustId() {
+        return custId;
+    }
+
+    public void setCustId(String custId) {
+        this.custId = custId;
+    }
+
+    public String getRepairedType() {
+        return RepairedType;
+    }
+
+    public void setRepairedType(String repairedType) {
+        RepairedType = repairedType;
+    }
+
+    public String RepairedType;
+    public String getChargeRm() {
+        return ChargeRm;
+    }
+
+    public void setChargeRm(String chargeRm) {
+        ChargeRm = chargeRm;
+    }
+
+    public  String ChargeRm;
+
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+
 
     public boolean isAccepted;
     public boolean isUpdated;
@@ -108,10 +150,12 @@ public class InvoiceMode {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public InvoiceMode(String status, String address, String model, String phoneNo,
+    public InvoiceMode(String chargeRm,String name,String status, String address, String model, String phoneNo,
                        String pickupTime, String service, String brand, String date,
-                       String reason, boolean isAccepted, boolean isUpdated) {
-
+                       String reason, boolean isAccepted, boolean isUpdated,String custId) {
+        this.custId = custId;
+        this.ChargeRm=chargeRm;
+        this.Name=name;
         this.Status = status;
         this.Date = date;
         this.Address = address;
@@ -125,4 +169,6 @@ public class InvoiceMode {
         this.isUpdated = isUpdated;
 
     }
+
+
 }

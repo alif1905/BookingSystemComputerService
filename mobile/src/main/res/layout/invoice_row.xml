@@ -24,18 +24,6 @@
             android:text="TextView"
             tools:textColor="@android:color/background_dark" />
 
-        <Space
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView"
-            tools:textColor="@android:color/background_dark" />
 
         <Space
             android:layout_width="30dp"
@@ -69,11 +57,32 @@
             android:layout_weight="1" />
 
         <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView"
+            tools:textColor="@android:color/background_dark" />
+        <Space
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
             android:id="@+id/tvRm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="TextView"
+            tools:textColor="@android:color/background_dark" />
+
+
+        <Button
+            android:id="@+id/btnViewInvoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="View Invoice"
             tools:textColor="@android:color/background_dark" />
     </LinearLayout>
 

@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Select Date"
+            android:text="Select Picker Date"
             android:textSize="20sp"
             tools:ignore="HardcodedText,LabelFor,TextViewEdits"/>
 
@@ -91,7 +91,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Time Picker: "
+            android:text="Select Picker Time: "
             android:textSize="18sp"
             android:id="@+id/selectTime"
             android:layout_alignParentLeft="true"
@@ -110,7 +110,7 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Address :"
+            android:text="Pickup Address :"
             android:textSize="18sp"
             android:id="@+id/addressCust"
             android:layout_alignParentLeft="true"

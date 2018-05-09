@@ -16,14 +16,14 @@
         android:text="Customer Invoice"
         android:textSize="15dp" />
 
-    <Button
-        android:id="@+id/btnInventoryInvoice"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:text="Inventory Invoice"
-        android:textSize="15dp" />
+    <!--<Button-->
+        <!--android:id="@+id/btnInventoryInvoice"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="40dp"-->
+        <!--android:text="Inventory Invoice"-->
+        <!--android:textSize="15dp" />-->
     <Button
         android:id="@+id/btnBackFinancial"
         android:layout_width="300dp"

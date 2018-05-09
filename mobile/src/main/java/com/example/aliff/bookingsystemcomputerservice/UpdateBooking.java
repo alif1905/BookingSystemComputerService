@@ -151,10 +151,12 @@ public class UpdateBooking extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.btnUpdateRequest:
                 updateDetail();
+                super.onBackPressed();
                 Intent i = new Intent(UpdateBooking.this, displayBooking.class);
                 i.putExtra("ACCESSLEVEL", accesslevel);
                 i.putExtra("CustID", CustId);
                 i.putExtra("value", value);
+
                 break;
 
             case R.id.dateEt:

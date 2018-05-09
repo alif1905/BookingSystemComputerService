@@ -1,10 +1,13 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.nispok.snackbar.Snackbar;
@@ -18,12 +21,12 @@ public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickLi
 
     // View lookup cache
     public static class ViewHolder {
-        TextView tvName;
+        TextView tvStatus;
         TextView tvDate;
         TextView tvItem;
         TextView tvService;
         TextView tvRm;
-
+        Button invoice;
     }
 
     public Invoice(ArrayList<InvoiceMode> data, Context context) {
@@ -54,38 +57,55 @@ public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickLi
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        InvoiceMode dataModel = getItem(position);
+        final InvoiceMode dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
-        final View result;
+         View result;
 
         if (convertView == null) {
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.invoice_row, parent, false);
+
             viewHolder.tvDate = (TextView) convertView.findViewById(R.id.tvDate);
-            viewHolder.tvName = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.tvItem = (TextView) convertView.findViewById(R.id.tvItem);
             viewHolder.tvService = (TextView) convertView.findViewById(R.id.tvService);
+            viewHolder.tvStatus = (TextView) convertView.findViewById(R.id.tvStatus);
             viewHolder.tvRm = (TextView) convertView.findViewById(R.id.tvRm);
-
-
+            viewHolder.invoice=(Button)convertView.findViewById(R.id.btnViewInvoice) ;
+            result=convertView;
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (Invoice.ViewHolder) convertView.getTag();
+            result=convertView;
+
         }
         lastPosition = position;
 
 
         viewHolder.tvDate.setText(dataModel.getDate());
-        viewHolder.tvName.setText("Dummy Name");
         viewHolder.tvItem.setText((dataModel.getModel()+" "+dataModel.getBrand()));
         viewHolder.tvService.setText(dataModel.getService());
-        viewHolder.tvRm.setText("RM 20");
+        viewHolder.tvRm.setText("RM"+dataModel.getChargeRm());
+
+        viewHolder.tvStatus.setText(dataModel.getStatus());
+        viewHolder.invoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mContext instanceof CustomerInvoice) {
+                    ((CustomerInvoice)mContext).print(
+                            dataModel.getService(),
+                            dataModel.getBrand(),
+                            dataModel.getModel().toString()
+                    );
+                }
+            }
+        });
 
         // Return the completed view to render on screen
-        return convertView;
+        return result;
     }
+
 }

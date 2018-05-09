@@ -238,13 +238,28 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     }
 
 
+
+
     public void submitForm() {
+
+
+
 
         modelDb = mEditModel.getText().toString();
 
         addressDb = mEditAddress.getText().toString();
         phoneNoDb = mEditPhone.getText().toString();
         dateDb = mEditDatePicker.getText().toString();
+
+
+
+
+
+
+
+
+
+
 
         if (TextUtils.isEmpty(dateDb)) {
             Toast.makeText(New_Booking.this, "Select Date", Toast.LENGTH_SHORT).show();
@@ -262,13 +277,20 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             Toast.makeText(New_Booking.this, "Address is required", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(phoneNoDb)) {
-            Toast.makeText(New_Booking.this, "Phone Number is required", Toast.LENGTH_SHORT).show();
+        if ((!phoneNoDb.startsWith("01")) && phoneNoDb.length()< 12 && TextUtils.isEmpty(phoneNoDb)) {
+
+            Toast.makeText(New_Booking.this, "Phone Number is Invalid", Toast.LENGTH_LONG).show();
+
             return;
         }
 
 
-        if ((!TextUtils.isEmpty(modelDb) && !TextUtils.isEmpty(addressDb) && !TextUtils.isEmpty(phoneNoDb))) {
+
+
+
+
+
+        if ((!TextUtils.isEmpty(modelDb) && !TextUtils.isEmpty(addressDb) && !TextUtils.isEmpty(phoneNoDb)&&(phoneNoDb.startsWith("01")) && (phoneNoDb.length()< 12) && !TextUtils.isEmpty(phoneNoDb))) {
             mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Bookings");
             DatabaseReference current_user_db = mDatabaseRef.child(userid).child(brandDb + " " + modelDb);
             current_user_db.child("BrandModel").setValue(brandDb+" "+modelDb);
@@ -280,7 +302,8 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
             current_user_db.child("Address").setValue(addressDb);
             current_user_db.child("PhoneNo").setValue(phoneNoDb);
             current_user_db.child("Reason").setValue(" ");
-
+            current_user_db.child("ChargeRM").setValue(" ");
+            current_user_db.child("Repairing").setValue(" ");
             current_user_db.child("Status").setValue("Request Pending");
             current_user_db.child("isUpdated").setValue(false);
             current_user_db.child("isAccepted").setValue(false);
@@ -290,16 +313,18 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
             Toast.makeText(New_Booking.this,"Successfull Book a Service...", Toast.LENGTH_SHORT).show();
 
-            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("AdminNoti").child(userid).child(brandDb+" "+modelDb);
-            DatabaseReference notiAdmin =mDatabaseRef;
-            notiAdmin.child("Date").setValue(dateDb);
-            notiAdmin.child("PickupTime").setValue(pickupTimeDb);
-            notiAdmin.child("Status").setValue("Request Pending");
-            notiAdmin.child("Reason").setValue(" ");
+//            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("AdminNoti").child(userid).child(brandDb+" "+modelDb);
+//            DatabaseReference notiAdmin =mDatabaseRef;
+//            notiAdmin.child("Date").setValue(dateDb);
+//            notiAdmin.child("PickupTime").setValue(pickupTimeDb);
+//            notiAdmin.child("Status").setValue("Request Pending");
+//            notiAdmin.child("Reason").setValue(" ");
 
-            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("CustNoti").child(userid).child(brandDb + " " + modelDb);
+            mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("CustNoti").child(userid).child(brandDb+" "+modelDb);
             DatabaseReference notiCust =mDatabaseRef;
             notiCust.child("Status").setValue("Request Pending");
+
+
 
 
             finish();

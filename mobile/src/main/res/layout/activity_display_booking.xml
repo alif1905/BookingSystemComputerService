@@ -236,12 +236,12 @@
                 android:layout_weight="1"
                 android:text="Repaired Type" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tvRepairedType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:hint="State Service" />
 
         </LinearLayout>
 
@@ -309,6 +309,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Return Service" />
+        <Button
+            android:id="@+id/btnDoneCollectItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Done Collect Item" />
 
 
         <Button
@@ -316,8 +322,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Contact" />
+            android:text="Contact Customer" />
 
+        <Button
+            android:id="@+id/btnDiagnose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Service Diagnose" />
+        <Button
+            android:id="@+id/btnSubmitDiagnoseRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Submit Diagnose" />
 
 
     </LinearLayout>
