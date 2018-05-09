@@ -287,12 +287,12 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
             table.completeRow();
 
         }
-        int m = 0;
-        double total = 0;
-        while (m < i) {
-
-            total = total + Double.parseDouble(c[m++]);
-        }
+//        int m = 0;
+//        double total = 0;
+//        while (m < i) {
+//
+//            total = total + Double.parseDouble(c[m++]);
+//        }
 
 
         PdfPCell cellOne = new PdfPCell();
@@ -301,7 +301,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         table.addCell(cellOne);
         table.addCell(cellOne);
         table.addCell("Total");
-        table.addCell("RM " + String.format("%.2f", total) + "");
+//        table.addCell("RM " + String.format("%.2f", total) + "");
         table.completeRow();
 
         document.add(table);
