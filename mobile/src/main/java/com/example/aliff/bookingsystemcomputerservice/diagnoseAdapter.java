@@ -43,6 +43,8 @@ public class diagnoseAdapter extends AppCompatActivity{
     private TextView itemName,itemQuantity,QuantityInneed;
     private LinearLayout linearLayout;
 
+    private ListView listView;
+
     private ArrayAdapter<InvoiceModalInventory> arrayListAdapter;
 
 
@@ -50,16 +52,18 @@ public class diagnoseAdapter extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diagnose_adapter);
-//
+
+
 
         itemName=(TextView)findViewById(R.id.tvItemName);
         itemQuantity=(TextView)findViewById(R.id.tvItemQuantity);
         QuantityInneed=(TextView)findViewById(R.id.tvQuantityInNeed);
         linearLayout = (LinearLayout)findViewById(R.id.holder2);
 
-
-        arrayListAdapter = new UsedItemAdapter(selected_item, getApplicationContext());
-//        areaSpinner.setAdapter(arrayListAdapter);
+        listView = findViewById(R.id.recyclerView);
+        selected_item.add(new InvoiceModalInventory("sdf","sdf","sdf","sdfsdf"));
+        arrayListAdapter = new UsedItemAdapter(selected_item, diagnoseAdapter.this);
+        listView.setAdapter(arrayListAdapter);
 
 
         areaSpinner = findViewById(R.id.spinnerSelectItemDiagnose);
@@ -72,9 +76,13 @@ public class diagnoseAdapter extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 areasAdapter.getItem(position);
-                selected_item.add(hold_item.get(position));
+                arrayListAdapter.add(new InvoiceModalInventory(
+                        "",
+                        "",
+                        "",
+                        ""
+                ));
                 arrayListAdapter.notifyDataSetChanged();
-
             };
 
             @Override
@@ -82,6 +90,7 @@ public class diagnoseAdapter extends AppCompatActivity{
 
             }
         });
+
 
 
     }
