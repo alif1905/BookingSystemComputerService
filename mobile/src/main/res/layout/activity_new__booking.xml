@@ -82,6 +82,14 @@
             android:textSize="20sp"
             tools:ignore="HardcodedText,LabelFor,TextViewEdits"/>
 
+        <ImageButton
+            android:src="@drawable/ic_default_user"
+            android:layout_gravity="center"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:id="@+id/SelectDate"
+            android:inputType="text"/>
+
         <EditText
             android:layout_width="300sp"
             android:layout_height="wrap_content"

@@ -58,6 +58,7 @@ public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickLi
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         final InvoiceMode dataModel = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -96,9 +97,12 @@ public class Invoice extends ArrayAdapter<InvoiceMode> implements View.OnClickLi
             public void onClick(View v) {
                 if (mContext instanceof CustomerInvoice) {
                     ((CustomerInvoice)mContext).print(
+                            dataModel.getBrand()+" "+
+                                    dataModel.getModel(),
                             dataModel.getService(),
-                            dataModel.getBrand(),
-                            dataModel.getModel().toString()
+                            dataModel.getPhoneNo(),
+                            dataModel.getChargeRm(),""
+
                     );
                 }
             }

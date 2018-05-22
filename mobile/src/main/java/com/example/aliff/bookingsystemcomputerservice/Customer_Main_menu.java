@@ -23,7 +23,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 
 public class Customer_Main_menu extends AppCompatActivity {
-    private Button mLogoutCustomer, mChatRoomCust, mProfileCust,mBookCust;
+    private Button mLogoutCustomer, mProfileCust,mBookCust;
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference myRef;
@@ -59,7 +59,7 @@ public class Customer_Main_menu extends AppCompatActivity {
 
 
         mLogoutCustomer = findViewById(R.id.LogoutCustomer);
-        mChatRoomCust = findViewById(R.id.chatroomCustomer);
+//        mChatRoomCust = findViewById(R.id.chatroomCustomer);
         mProfileCust = findViewById(R.id.ProfileCustomer);
         mBookCust = findViewById(R.id.btnBookCust);
 
@@ -77,17 +77,17 @@ public class Customer_Main_menu extends AppCompatActivity {
             }
         });
 
-        mChatRoomCust.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Customer_Main_menu.this, "Chatroom...", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Customer_Main_menu.this, Chat_Room1.class);
-                startActivity(intent);
-                finish();
-                return;
-
-            }
-        });
+//        mChatRoomCust.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(Customer_Main_menu.this, "Chatroom...", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(Customer_Main_menu.this, Chat_Room1.class);
+//                startActivity(intent);
+//                finish();
+//                return;
+//
+//            }
+//        });
 
         mProfileCust.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,57 +121,52 @@ public class Customer_Main_menu extends AppCompatActivity {
 
     @Override
     public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        userid = currentUser.getUid();
-
-
-        Toast.makeText(getApplicationContext(), "Welcome " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("Register").child(userid);
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
+                super.onStart();
+                // Check if user is signed in (non-null) and update UI accordingly.
+                       FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String id = currentUser.getUid();
+                database = FirebaseDatabase.getInstance();
+                myRef = database.getReference("Register").child(id);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+          @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Auth auth = dataSnapshot.getValue(Auth.class);
-                accesslevel = auth.accessLevel;
-                if (!accesslevel.equals("Customer")) {
-                    Toast.makeText(getApplicationContext(), "Login failed, please Login as customer...", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(Customer_Main_menu.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
+                                Auth auth = dataSnapshot.getValue(Auth.class);
+                                accesslevel = auth.accessLevel;
+                                if (!accesslevel.equals("Customer")) {
+                                       Toast.makeText(getApplicationContext(), "Login failed, please Login as customer...", Toast.LENGTH_LONG).show();
+                                        Intent i = new Intent(Customer_Main_menu.this, MainActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                   }
+                                else {
+                                       Toast.makeText(getApplicationContext(), "Welcome "+auth.email, Toast.LENGTH_LONG).show();
+                                    }
+                           }
 
-
-            }
-
-            @Override
+                    @Override
             public void onCancelled(DatabaseError databaseError) {
 
-            }
-
-        });
-
+                                    }
+       });
 
 
+                            }
 
-    }
-
-
-    @IgnoreExtraProperties
+            @IgnoreExtraProperties
     public static class Auth {
 
-        public String email;
+                public String email;
         public String accessLevel;
 
-        public Auth() {
+                public Auth() {
         }
 
-        public Auth(String email, String accessLevel) {
-            this.email = email;
-            this.accessLevel = accessLevel;
-        }
+                public Auth(String email, String accessLevel) {
+                       this.email = email;
+                        this.accessLevel = accessLevel;
+                    }
 
     }
+
 
 }

@@ -41,12 +41,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.itextpdf.text.PageSize.A4;
 
-public class CustomerInvoice extends AppCompatActivity implements View.OnClickListener {
+public class
+CustomerInvoice extends AppCompatActivity implements View.OnClickListener {
     final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
     private File pdfFile;
     private String accesslevel;
@@ -55,8 +59,9 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     private String value;
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
-
-
+    String date =  new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+    int year = Calendar.getInstance().get(Calendar.YEAR);
+    String billno="BSCS"+year;
     private ArrayList<InvoiceMode> dataModels;
     private ListView listView;
     private Invoice adapter;
@@ -82,9 +87,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
 
 
-        switch (view.getId()) {
 
-        }
     }
 
     @Override
@@ -141,8 +144,8 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
                                 invoice.Date,
                                 invoice.Reason,
                                 true,
-                                true,
-                                key));
+                                true
+                               ));
                         adapter.notifyDataSetChanged();
 
 
@@ -163,14 +166,18 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    public void print(String A, String B, String C ) {
+    public void print(String A, String B, String C, String G, String F ) {
+
+
         String[] a = {A};
         String[] b = {B};
         String[] c = {C};
+        String[] g = {G};
+        String[] f = {F};
 
 
         try {
-            sendData(a,b,c,1,"K");
+            sendData(a,b,c,g,f,1,"K");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -178,11 +185,11 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    public void sendData(String[] a, String[] b, String[] c, int i, String k) throws FileNotFoundException {
+    public void sendData(String[] a, String[] b, String[] c,String[] g,String[] f, int i, String k) throws FileNotFoundException {
 
 
         try {
-            createPdfWrapper(a, b, c, i, k);
+            createPdfWrapper(a, b, c,g,f, i, k);
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -190,7 +197,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
     }
 
 
-    public void createPdfWrapper(String[] a, String[] b, String[] c, int i, String k) throws FileNotFoundException, DocumentException {
+    public void createPdfWrapper(String[] a, String[] b, String[] c, String[] g, String[] f, int i, String k) throws FileNotFoundException, DocumentException {
 
         int hasWriteStoragePermission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
@@ -215,7 +222,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
             }
             return;
         } else {
-            createPdf(a, b, c, i, k);
+            createPdf(a, b, c,g,f, i, k);
         }
     }
 
@@ -228,7 +235,7 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
                 .show();
     }
 
-    private void createPdf(String[] a, String[] b, String[] c, int i, String k) throws FileNotFoundException, DocumentException {
+    private void createPdf(String[] a, String[] b, String[] c, String[] g, String[] f, int i, String k) throws FileNotFoundException, DocumentException {
 
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         if (!docsFolder.exists()) {
@@ -243,22 +250,22 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         document.setPageSize(A4);
         document.open();
 
-        Paragraph d = new Paragraph("Date : " + "TODAY" + "  Bill no : ");
+        Paragraph d = new Paragraph("Date : " + date + "  Bill no : "+ billno);
         d.setAlignment(Element.ALIGN_LEFT);
         document.add(d);
         document.add(Chunk.NEWLINE);
 
 
-        Paragraph com_name = new Paragraph("Michael Electronic Services", FontFactory.getFont(FontFactory.TIMES_ROMAN, 24));
+        Paragraph com_name = new Paragraph("Booking System Computer Service", FontFactory.getFont(FontFactory.TIMES_ROMAN, 24));
         com_name.setAlignment(Element.ALIGN_CENTER);
         document.add(com_name);
 
-        Paragraph address = new Paragraph("190 GF Jalan Tun Ahmad Zaidi Parkcity Phase II, 97000 Bintulu");
+        Paragraph address = new Paragraph("Kolej 12, No.Bilik 122, Blok L1 , UPM , Serdang.");
         address.setAlignment(Element.ALIGN_CENTER);
         document.add(address);
 
 
-        Paragraph phone = new Paragraph("Office : 086-331925 Handphone : 014-583-3303");
+        Paragraph phone = new Paragraph("Office :085-855955 Handphone : 019-3606160");
         phone.setAlignment(Element.ALIGN_CENTER);
         document.add(phone);
 
@@ -266,24 +273,27 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         document.add(Chunk.NEWLINE);
 
 
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(5);
 
-        table.setTotalWidth(new float[]{1, 2, 2, 2});
+        table.setTotalWidth(new float[]{1, 2, 2, 2,2});
         table.setHorizontalAlignment(Element.ALIGN_CENTER);
 //        table.setLockedWidth(true);
 
-        table.addCell("No");
-        table.addCell("Product");
-        table.addCell("Faulty");
+        table.addCell("No.");
+        table.addCell("Brand Model");
+        table.addCell("Type Service");
+        table.addCell("No.Phone");
         table.addCell("Price");
         table.completeRow();
 
         int l = 1;
         for (int j = 0; j < i; j++) {
             table.addCell(l++ + "");
-            table.addCell(a[j].toString());
+            table.addCell(a[j]);
             table.addCell(b[j]);
-            table.addCell("RM " + c[j].toString());
+            table.addCell(c[j]);
+            table.addCell(g[j]);
+            table.addCell("RM " + f[j].toString());
             table.completeRow();
 
         }
@@ -298,6 +308,9 @@ public class CustomerInvoice extends AppCompatActivity implements View.OnClickLi
         PdfPCell cellOne = new PdfPCell();
         cellOne.setBorder(Rectangle.NO_BORDER);
 
+        table.addCell(cellOne);
+        table.addCell(cellOne);
+        table.addCell(cellOne);
         table.addCell(cellOne);
         table.addCell(cellOne);
         table.addCell("Total");

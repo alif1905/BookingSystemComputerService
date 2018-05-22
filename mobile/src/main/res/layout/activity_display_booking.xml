@@ -231,14 +231,14 @@
 
             <TextView
                 android:id="@+id/RepairedPart"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Repaired Type" />
 
-            <EditText
+            <ListView
                 android:id="@+id/tvRepairedType"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="State Service" />
@@ -261,7 +261,7 @@
                 android:layout_weight="1"
                 android:text="Charge (RM)" />
 
-           <EditText
+           <TextView
                 android:id="@+id/tvCostCharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

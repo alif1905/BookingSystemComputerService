@@ -141,7 +141,7 @@ public class bookinglist_adapter extends ArrayAdapter<InvoiceMode>  {
             //    i.putExtra("CustID", CustId);
                 i.putExtra("userid",userid);
                 i.putExtra("ACCESSLEVEL", accesslevel);
-                i.putExtra("CustID",  rootValues.get(itemPosition).toString());
+                i.putExtra("CustID",  CustId);
                 mContext.startActivity(i);
             }
         });

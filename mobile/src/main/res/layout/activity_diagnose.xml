@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.aliff.bookingsystemcomputerservice.diagnose">
+    tools:context="com.example.aliff.bookingsystemcomputerservice.UsedItemAdapter">
 
 
 
@@ -13,14 +13,78 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <ListView
-            android:id="@+id/listViewCustInvoice"
-            style="@style/Widget.AppCompat.Light.ListView.DropDown"
+        <LinearLayout
+            android:id="@+id/holder"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@android:color/holo_blue_light" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+
+            <TextView
+                android:id="@+id/tvItemName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                tools:textColor="@android:color/background_dark" />
+
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvItemQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                tools:textColor="@android:color/background_dark" />
+
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnAddQuantity"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="-"/>
+
+            <Button
+                android:id="@+id/btnSubtractQuantity"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+"/>
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+
+
+            <TextView
+                android:id="@+id/tvQuantityInNeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                tools:textColor="@android:color/background_dark" />
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
     </HorizontalScrollView>
 
 

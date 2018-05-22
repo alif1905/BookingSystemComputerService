@@ -13,17 +13,9 @@ public class InvoiceMode {
     public String Reason;
     public String Status;
     public String Name;
-    public String custId;
 
 
 
-    public String getCustId() {
-        return custId;
-    }
-
-    public void setCustId(String custId) {
-        this.custId = custId;
-    }
 
     public String getRepairedType() {
         return RepairedType;
@@ -152,8 +144,8 @@ public class InvoiceMode {
 
     public InvoiceMode(String chargeRm,String name,String status, String address, String model, String phoneNo,
                        String pickupTime, String service, String brand, String date,
-                       String reason, boolean isAccepted, boolean isUpdated,String custId) {
-        this.custId = custId;
+                       String reason, boolean isAccepted, boolean isUpdated) {
+
         this.ChargeRm=chargeRm;
         this.Name=name;
         this.Status = status;

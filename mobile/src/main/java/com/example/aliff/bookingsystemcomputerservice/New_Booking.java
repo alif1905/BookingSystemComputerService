@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -48,7 +50,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
     private int mYear, mMonth, mDay;
     private DatabaseReference myRef;
 
-
+    private ImageButton SelectDate;
 
 
     private FirebaseAuth mAuth;
@@ -65,7 +67,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
         Intent intent = getIntent();
         accesslevel = intent.getStringExtra("ACCESSLEVEL");
 
-
+        SelectDate=findViewById(R.id.SelectDate);
         mBackBtn = findViewById(R.id.BackBtn);
         mBtnSubmit = findViewById(R.id.BtnBookServiceCust);
         mspinnerService = findViewById(R.id.spinnerService_Require);
@@ -83,6 +85,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
         mEditAddress = findViewById(R.id.editTextAddressCust);
         mEditPhone = findViewById(R.id.editTextphoneCust);
         mEditDatePicker = findViewById(R.id.editTextDate);
+        mEditDatePicker.setFocusable(false);
 
 
 
@@ -153,7 +156,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
         mBtnSubmit.setOnClickListener(this);
 
-        mEditDatePicker.setOnClickListener(this);
+        SelectDate.setOnClickListener(this);
     }
 
 
@@ -174,7 +177,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
                 break;
 
-            case R.id.editTextDate:
+            case R.id.SelectDate:
 
                 datePicker(view);
                 break;
@@ -186,7 +189,7 @@ public class New_Booking extends AppCompatActivity implements View.OnClickListen
 
     private void datePicker(View view) {
 
-        if (view == mEditDatePicker) {
+        if (view == SelectDate) {
             final Calendar c = Calendar.getInstance();
             mYear = c.get(Calendar.YEAR);
             mMonth = c.get(Calendar.MONTH);

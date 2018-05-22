@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -48,8 +50,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
     private FirebaseAuth mAuth;
     private DatabaseReference myRef;
     private TextView tvStatus,tvAdd, tvBrand, tvModel, tvPhone, tvPick, tvService, tvDate,tvReason;
-    private EditText tvCharge;
-    private EditText tvRepairType;
+    private TextView tvCharge;
+    private ListView tvRepairType;
     private TextView titlereason,titleRepaired,titleCharge;
 
     private ProgressDialog progressDialog;
@@ -127,8 +129,8 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         titleRepaired = (TextView) findViewById(R.id.RepairedPart);
 
 
-        tvCharge = (EditText) findViewById(R.id.tvCostCharge);
-        tvRepairType = (EditText) findViewById(R.id.tvRepairedType);
+        tvCharge = (TextView) findViewById(R.id.tvCostCharge);
+        tvRepairType = (ListView) findViewById(R.id.tvRepairedType);
         tvStatus = (TextView) findViewById(R.id.tvStatusService);
         tvAdd = (TextView) findViewById(R.id.tvAddress);
         tvBrand = (TextView) findViewById(R.id.tvBrand);
@@ -402,16 +404,12 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 
 
 
-                                    String toNumber = tvPhone.getText().toString(); // contains spaces.
+                                    String toNumber ="+6"+ tvPhone.getText().toString(); // contains spaces.
                                     toNumber = toNumber.replace("+", "").replace(" ", "");
 
-                                    Intent sendIntent = new Intent("android.intent.action.MAIN");
-                                    sendIntent.putExtra("jid", toNumber + "@s.whatsapp.net");
-
-                                    sendIntent.setAction(Intent.ACTION_SEND);
-                                    sendIntent.setPackage("com.whatsapp");
-                                    sendIntent.setType("text/plain");
-                                    startActivity(sendIntent);
+                                    Uri uri = Uri.parse("https://api.whatsapp.com/send?phone="+toNumber+"&text=Hello%20");
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(intent);
 
                                 }
                             });
@@ -490,11 +488,11 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-        repairingDb=tvRepairType .getText().toString();
-        if (TextUtils.isEmpty(repairingDb)) {
-            Toast.makeText(displayBooking.this, "Please State Repairing!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        repairingDb=tvRepairType .getText().toString();
+//        if (TextUtils.isEmpty(repairingDb)) {
+//            Toast.makeText(displayBooking.this, "Please State Repairing!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
 
 
@@ -755,10 +753,10 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
     }
 
     public void hideButton(){
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
-
+        if (accesslevel.equals("USER")||accesslevel.equals("ADMIN")) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            myRef = database.getReference().child("Bookings").child(CustId).child(value).child("Status");
+        }
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1277,7 +1275,6 @@ public void doneCollect(){
     }
 
 
-
     public void getBookings() {
 
         if(accesslevel.equals("USER")) {
@@ -1289,7 +1286,7 @@ public void doneCollect(){
             } else {
 
 
-                        myRef = database.getReference().child("Bookings").child(CustId).child(value);
+                myRef = database.getReference().child("Bookings").child(CustId).child(value);
 
 
             }
@@ -1300,7 +1297,7 @@ public void doneCollect(){
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Services service = dataSnapshot.getValue(Services.class);
-                    tvRepairType.setText(service.Repairing);
+                //    tvRepairType.setText(service.Repairing);
                     tvCharge.setText(service.ChargeRM);
                     tvDate.setText(service.Date);
                     tvAdd.setText(service.Address);
@@ -1343,7 +1340,7 @@ public void doneCollect(){
                 myRef = database.getReference().child("Bookings").child(userid).child(value);
             } else {
 
-                        myRef = database.getReference().child("Bookings").child(CustId).child(value);
+                myRef = database.getReference().child("Bookings").child(CustId).child(value);
             }
 
             Toast.makeText(getApplicationContext(), value, Toast.LENGTH_LONG).show();
@@ -1352,7 +1349,7 @@ public void doneCollect(){
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Services service = dataSnapshot.getValue(Services.class);
-                    tvRepairType.setText(service.Repairing);
+               //     tvRepairType.setText(service.Repairing);
                     tvCharge.setText(service.ChargeRM);
                     tvDate.setText(service.Date);
                     tvAdd.setText(service.Address);

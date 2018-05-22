@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Admin_Main_menu extends AppCompatActivity implements View.OnClickListener {
 
-    private Button mRecordInventory, mLogoutAdmin, mProfileAdmin, mRegisterAdmin;
+    private Button mRecordInventory, mLogoutAdmin, mProfileAdmin;
 
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
@@ -33,7 +33,7 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
     private Button mBookings;
     private Intent intent;
     private Button mMFinancial;
-    private Button mTesting;
+
 
 
     private NotificationCompat.Builder builder;
@@ -64,20 +64,20 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         mMFinancial=(Button)findViewById(R.id.btnFinancial);
         mLogoutAdmin =(Button) findViewById(R.id.LogoutAdmin);
         mProfileAdmin =(Button) findViewById(R.id.ProfileAdmin);
-        mRegisterAdmin =(Button) findViewById(R.id.RegisterAdmin);
+//        mRegisterAdmin =(Button) findViewById(R.id.RegisterAdmin);
         mBookings = (Button) findViewById(R.id.btnBookings);
         mRecordInventory = (Button) findViewById(R.id.btnRecordInventory);
 
-        mTesting = (Button) findViewById(R.id.Testing);
+
 
         mBookings.setOnClickListener(this);
-        mRegisterAdmin.setOnClickListener(this);
+//        mRegisterAdmin.setOnClickListener(this);
         mProfileAdmin.setOnClickListener(this);
         mLogoutAdmin.setOnClickListener(this);
         mRecordInventory.setOnClickListener(this);
         mMFinancial.setOnClickListener(this);
 
-        mTesting.setOnClickListener(this);
+
     }
 
 
@@ -87,16 +87,7 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
         Intent intent;
 
         switch (view.getId()) {
-            case R.id.Testing:
-                intent = new Intent(Admin_Main_menu.this, ViewInvoicePDF.class);
 
-                intent.putExtra("ACCESSLEVEL", accesslevel);
-
-                startActivity(intent);
-                finish();
-
-
-                break;
 
             case R.id.btnFinancial:
                 intent = new Intent(Admin_Main_menu.this, Manage_Financial.class);
@@ -128,11 +119,11 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
 
 
                 break;
-            case R.id.RegisterAdmin:
-                intent = new Intent(Admin_Main_menu.this, Admin_register.class);
-                startActivity(intent);
-                finish();
-                break;
+//            case R.id.RegisterAdmin:
+//                intent = new Intent(Admin_Main_menu.this, Admin_register.class);
+//                startActivity(intent);
+//                finish();
+//                break;
             case R.id.LogoutAdmin:
                 FirebaseAuth.getInstance().signOut();
                 intent = new Intent(Admin_Main_menu.this, MainActivity.class);
@@ -147,122 +138,52 @@ public class Admin_Main_menu extends AppCompatActivity implements View.OnClickLi
     }
 
 
-
     @Override
     public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String id = currentUser.getUid();
-
-        Toast.makeText(getApplicationContext(), "Welcome " + currentUser.getEmail(), Toast.LENGTH_LONG).show();
-
-
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("Register").child(id);
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                super.onStart();
+                // Check if user is signed in (non-null) and update UI accordingly.
+                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                String id = currentUser.getUid();
+                database = FirebaseDatabase.getInstance();
+               myRef = database.getReference("Register").child(id);
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Auth auth = dataSnapshot.getValue(Auth.class);
-                accesslevel = auth.accessLevel;
-                if (!accesslevel.equals("Admin")) {
-                    Toast.makeText(getApplicationContext(), "Login failed, please Login as admin...", Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(Admin_Main_menu.this, MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-                else{
-//                    myRef = database.getReference().child("AdminNoti");
-//                    myRef.addChildEventListener(new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                            triggerNoti();
-//                        }
-//
-//                        @Override
-//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                            triggerNoti();
-//                        }
-//
-//                        @Override
-//                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                            triggerNoti();
-//                        }
-//
-//                        @Override
-//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
+                               Auth auth = dataSnapshot.getValue(Auth.class);
+                               accesslevel = auth.accessLevel;
+                               if (!accesslevel.equals("Admin")) {
+                                        Toast.makeText(getApplicationContext(), "Login failed, please Login as admin...", Toast.LENGTH_LONG).show();
+                                        Intent i = new Intent(Admin_Main_menu.this, MainActivity.class);
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                else {
+                                        Toast.makeText(getApplicationContext(), "Welcome "+auth.email, Toast.LENGTH_LONG).show();
+                                    }
+                            }
 
-
-                }
-
-            }
-
-            @Override
+                    @Override
             public void onCancelled(DatabaseError databaseError) {
 
+                                   }
+      });
+
+                            }
+
+           @IgnoreExtraProperties
+   public static class Auth {
+
+                public String email;
+                public String accessLevel;
+
+               public Auth() {
+               }
+
+                public Auth(String email, String accessLevel) {
+                        this.email = email;
+                       this.accessLevel = accessLevel;
+                  }
+
             }
-        });
-
-
-
-
-
-    }
-
-
-
-//    public void triggerNoti(){
-//
-//        if (notificationManager.getActiveNotifications().length<=0) {
-//            notification_id = (int) System.currentTimeMillis();
-//
-//            Intent button_intent = new Intent(this,displayBooking.class);
-//            button_intent.putExtra("id",notification_id);
-//            PendingIntent button_pending_event = PendingIntent.getBroadcast(context,notification_id,
-//                    button_intent,0);
-//
-////            remoteViews.setOnClickPendingIntent(R.id.buttonShowNotification,button_pending_event);
-//
-//            Intent notification_intent = new Intent(context,MainActivity.class);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,notification_intent,0);
-//
-//            builder.setSmallIcon(R.mipmap.ic_launcher)
-//                    .setAutoCancel(true)
-//                    .setCustomBigContentView(remoteViews)
-//                    .setContentIntent(pendingIntent);
-//
-//            notificationManager.notify(notification_id,builder.build());
-//
-//        }
-//
-//
-//
-//    }
-
-
-
-    @IgnoreExtraProperties
-    public static class Auth {
-
-        public String email;
-        public String accessLevel;
-
-        public Auth() {
-        }
-
-        public Auth(String email, String accessLevel) {
-            this.email = email;
-            this.accessLevel = accessLevel;
-        }
-
-    }
 
 }
