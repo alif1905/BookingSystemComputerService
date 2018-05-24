@@ -143,6 +143,7 @@
 
 
     <string name="reason">Price</string>
+    <string name="selectitem">SelectItem</string>
     <string-array name="list_reason">
         <item>--</item>
         <item>Today Full Booking</item>

@@ -51,16 +51,16 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/btnAddQuantity"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="-"/>
-
-            <Button
                 android:id="@+id/btnSubtractQuantity"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:text="+"/>
+                android:text="-" />
+
+            <Button
+                android:id="@+id/btnAddQuantity"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="+" />
             <Space
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
