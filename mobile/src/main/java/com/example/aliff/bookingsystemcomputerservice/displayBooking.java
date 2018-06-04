@@ -233,7 +233,7 @@ public class displayBooking extends AppCompatActivity implements View.OnClickLis
 //                                public void onClick(final DialogInterface dialog, int which) {
                     Intent j = new Intent(displayBooking.this, diagnoseAdapter.class);
                     j.putExtra("ACCESSLEVEL", accesslevel);
-                    j.putExtra("userid", CustId);
+                    j.putExtra("custid", CustId);
                     j.putExtra("value", value);
 
 

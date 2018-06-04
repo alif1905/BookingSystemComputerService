@@ -84,6 +84,9 @@ public class UsedItemAdapter extends RecyclerView.Adapter<UsedItemAdapter.ViewHo
                 holder.itemPrice.setText(String.valueOf(totalprice));
                 holder.count.setText(String.valueOf(minteger));
                 holder.itemQuantity.setText(String.valueOf(sum));
+                item.setItemQuantity(String.valueOf(minteger));
+
+                updateInventory(sum, item);
             }
         });
 
@@ -94,13 +97,30 @@ public class UsedItemAdapter extends RecyclerView.Adapter<UsedItemAdapter.ViewHo
                 sum=totalQuantity-minteger;
                 totalprice=price*minteger;
                 holder.itemPrice.setText(String.valueOf(totalprice));
-                holder.count.setText(String.valueOf(minteger));
-                holder.itemQuantity.setText(String.valueOf(sum));
 
+                holder.count.setText(String.valueOf(minteger));
+                item.setItemQuantity(String.valueOf(minteger));
+
+
+                updateInventory(sum, item);
+
+                holder.itemQuantity.setText(String.valueOf(sum));
+            }
+        });
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                remove(item);
             }
         });
 
 
+    }
+
+
+    public List<InvoiceModalInventory> getAll(){
+        return items;
     }
 
 
@@ -165,39 +185,23 @@ public class UsedItemAdapter extends RecyclerView.Adapter<UsedItemAdapter.ViewHo
         }
     }
 
-//
-//    public void SubmitData() {
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//
-//        if (accesslevel.equals("USER")) {
-//            myRef = database.getReference().child("Bookings").child(userid).child(value);
-//        } else {
-//
-//            myRef = database.getReference().child("Bookings").child(CustId).child(value);
-//        }
-//
-//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//
-//
-//
-//
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//
-//
-//        });
-//
-//    }
+
+    public void updateInventory(int count, InvoiceModalInventory item){
+        try {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("inventory").child(item.getItemName()+" "+item.getItemBrand()).child("itemQuantity");
+            myRef.setValue(String.valueOf(count));
+        } catch (Exception e) {
+
+            Toast.makeText(c, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
 }
 
