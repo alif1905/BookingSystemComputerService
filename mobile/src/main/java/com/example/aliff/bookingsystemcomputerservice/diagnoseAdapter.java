@@ -1,6 +1,7 @@
 package com.example.aliff.bookingsystemcomputerservice;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,8 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,23 +29,29 @@ import java.util.List;
 
 
 public class diagnoseAdapter extends AppCompatActivity{
-
+    private String CustId;
+    private String userid, value,accesslevel;
     private ArrayList<String> spinnerData = new ArrayList<>();
     private AutoCompleteTextView   autoCompleteTextView;
     private RecyclerView recyclerView;
     private List<InvoiceModalInventory> hold_item = new ArrayList<>();
     private List<InvoiceModalInventory> selected_item = new ArrayList<>();
     private UsedItemAdapter usedItemAdapter;
-    private Button btn;
-    private int index = -1;
-
-
+    private Button btn,btnDoneDiagnose;
+    private int totalPrice =0;
+    private TextView mTotal;
+    private DatabaseReference myRef;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diagnose_adapter);
-
-
+        Intent intent = getIntent();
+        CustId = intent.getStringExtra("CustID");
+        value = intent.getStringExtra("Value");
+        accesslevel = intent.getStringExtra("ACCESSLEVEL");
+        mTotal = findViewById(R.id.tvPriceHardware);
+        btnDoneDiagnose=(Button)findViewById(R.id.DoneDiagnose);
         btn = findViewById(R.id.mBtnAdd);
         recyclerView = (RecyclerView) findViewById(R.id.mRecyclerView);
         usedItemAdapter = new UsedItemAdapter(getApplication(), selected_item, R.layout.activity_diagnose);
@@ -73,17 +82,34 @@ public class diagnoseAdapter extends AppCompatActivity{
             public void onDismiss() {
 
                 Toast.makeText(getApplicationContext(),autoCompleteTextView.getListSelection()+"",Toast.LENGTH_SHORT).show();
-
+                final int selected_item = autoCompleteTextView.getListSelection()+1;
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        usedItemAdapter.add(hold_item.get(autoCompleteTextView.getListSelection()+1),usedItemAdapter.getItemCount());
+
+                        usedItemAdapter.add(hold_item.get(selected_item),usedItemAdapter.getItemCount());
+                        totalPrice = usedItemAdapter.getTotalPrice();
+                        mTotal.setText(String.valueOf(totalPrice));
+
                     }
                 });
             }
         });
 
+        btnDoneDiagnose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent intent = new Intent(diagnoseAdapter.this,displayBooking.class);
+
+                intent.putExtra("ACCESSLEVEL", accesslevel);
+                intent.putExtra("userid", CustId);
+//                intent.putExtra("Va")
+                startActivity(intent);
+                Toast.makeText(diagnoseAdapter.this,"Saved...", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
 
     }
 
@@ -91,6 +117,14 @@ public class diagnoseAdapter extends AppCompatActivity{
     protected void onStart() {
         super.onStart();
         getSpinnerData();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent i = new Intent(diagnoseAdapter.this, MainActivity.class);
+            startActivity(i);
+        }
+
+        userid = currentUser.getUid();
 
 
     }
@@ -100,7 +134,8 @@ public class diagnoseAdapter extends AppCompatActivity{
 
 
     public void getSpinnerData() {
-
+            hold_item.clear();
+            spinnerData.clear();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -125,6 +160,7 @@ public class diagnoseAdapter extends AppCompatActivity{
         });
 
     }
+
 
 
 }

@@ -93,6 +93,7 @@ public class Profile_Admin extends AppCompatActivity {
             public void onClick(View v) {
                 saveUserInformation();
                 Intent intent = new Intent(Profile_Admin.this,Admin_Main_menu.class);
+
                 startActivity(intent);
                 Toast.makeText(Profile_Admin.this,"Saved...", Toast.LENGTH_SHORT).show();
                 finish();

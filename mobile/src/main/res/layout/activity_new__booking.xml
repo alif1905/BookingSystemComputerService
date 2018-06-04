@@ -83,12 +83,11 @@
             tools:ignore="HardcodedText,LabelFor,TextViewEdits"/>
 
         <ImageButton
-            android:src="@drawable/ic_default_user"
-            android:layout_gravity="center"
-            android:layout_width="40sp"
-            android:layout_height="40sp"
+
             android:id="@+id/SelectDate"
-            android:inputType="text"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@android:drawable/ic_menu_my_calendar" />
 
         <EditText
             android:layout_width="300sp"
@@ -161,5 +160,7 @@
             android:id="@+id/BackBtn"/>
 
     </TableLayout>
+
+
 
 </ScrollView>

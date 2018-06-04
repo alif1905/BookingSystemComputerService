@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/RL"
@@ -6,27 +7,272 @@
     android:layout_height="match_parent">
 
 
+<TextView
+    android:id="@+id/tvName"
+    android:layout_width="150dp"
+    android:layout_height="30dp"
+    android:text="Select Item :"
+    android:textSize="18dp"/>
+
+
     <AutoCompleteTextView
+        android:layout_marginTop="30dp"
         android:id="@+id/tvAutoComplete"
         android:layout_width="294dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        />
 
+    <LinearLayout
+        android:layout_marginTop="60dp"
+        android:id="@+id/holder"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:id="@+id/tvItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Item"
+            tools:textColor="@android:color/background_dark" />
+
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvItemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Qtty"
+            tools:textColor="@android:color/background_dark" />
+
+
+
+
+        <Space
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+
+
+        <TextView
+            android:id="@+id/tvQuantityInNeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Used"
+            tools:textColor="@android:color/background_dark" />
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/tvItemPriceCharge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Price"
+            tools:textColor="@android:color/background_dark" />
+
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="20dp"
         android:id="@+id/mRecyclerView"
         android:layout_below="@id/tvAutoComplete"
         android:layout_width="match_parent"
-        android:layout_height="209dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="234dp" />
+        android:layout_height="150dp"
+         />
+
 
     <Button
+        android:layout_marginTop="30dp"
         android:id="@+id/mBtnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:text="Add" />
+
+
+
+
+    <LinearLayout
+        android:layout_marginTop="270dp"
+        android:id="@+id/holder2"
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/a"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/tvChargeHardware"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Price Hardware                                    :"
+                    tools:textColor="@android:color/background_dark" />
+
+                <Space
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+
+                    android:id="@+id/tvPriceHardware"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    tools:textColor="@android:color/background_dark" />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/b"
+            android:layout_below="@+id/a"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/tvService"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Charge Service Price                          :"
+                    tools:textColor="@android:color/background_dark" />
+
+                <Space
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+
+                    android:id="@+id/tvPriceService"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    tools:textColor="@android:color/background_dark" />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_below="@+id/b"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/tvTotalPriceHardware"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Total Charge(Hardware + Service)  :"
+                    tools:textColor="@android:color/background_dark" />
+
+                <Space
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+
+                    android:id="@+id/tvTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    tools:textColor="@android:color/background_dark" />
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/DoneDiagnose"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="400dp"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:text="Done Diagnose"
+        android:gravity="center_horizontal"/>
+
+
+
+
 </RelativeLayout>

@@ -316,7 +316,7 @@ public class inventory_form extends AppCompatActivity implements View.OnClickLis
         itemName = itemNameEt.getText().toString();
         itemBrand = brandEt.getText().toString();
         itemPrice = priceEt.getText().toString();
-        itemQuantity = quantityEt.getText().toString();
+        itemQuantity =  quantityEt.getText().toString();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference().child("inventory");

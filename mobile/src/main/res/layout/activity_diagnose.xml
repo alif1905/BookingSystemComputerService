@@ -9,7 +9,7 @@
 
 
     <HorizontalScrollView
-
+        android:id="@+id/hrzonView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -33,7 +33,7 @@
                 tools:textColor="@android:color/background_dark" />
 
             <Space
-                android:layout_width="30dp"
+                android:layout_width="14dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
@@ -46,7 +46,7 @@
                 tools:textColor="@android:color/background_dark" />
 
             <Space
-                android:layout_width="30dp"
+                android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
@@ -62,7 +62,7 @@
                 android:layout_height="50dp"
                 android:text="+" />
             <Space
-                android:layout_width="10dp"
+                android:layout_width="15dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
@@ -77,6 +77,30 @@
                 tools:textColor="@android:color/background_dark" />
 
 
+            <Space
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+
+            <TextView
+                android:id="@+id/tvItemPriceCharge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                tools:textColor="@android:color/background_dark" />
+            <Space
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_delete" />
 
         </LinearLayout>
 
@@ -84,18 +108,5 @@
 
 
 
-
     </HorizontalScrollView>
-
-
-
-
-
-
-
-
-
-
-
-
 </RelativeLayout>

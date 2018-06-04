@@ -127,16 +127,16 @@
     <string name="price">Price</string>
     <string-array name="list_price">
 
-        <item>RM10</item>
-        <item>RM20</item>
-        <item>RM30</item>
-        <item>RM40</item>
-        <item>RM50</item>
-        <item>RM60</item>
-        <item>RM70</item>
-        <item>RM80</item>
-        <item>RM90</item>
-        <item>RM100</item>
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+        <item>70</item>
+        <item>80</item>
+        <item>90</item>
+        <item>100</item>
 
     </string-array>
     <string-array name="price" />
